@@ -1,0 +1,40 @@
+1. dashboard's classes : div class="ic-DashboardCard
+    - class name : this's aria-label
+    - semester : ic-DashboardCard__header-term ellipsis
+    - link : ic-DashboardCard__link
+    - alert num : unread_count
+
+2. announcements : __dir + courses/{coursenum}/announcements => ic-item-row ic-announcement-row
+    - title : class ic-item-row__content-link-container > h3
+    - explanation : ic-announcement-row__content
+    - timestamp : ic-item-row__meta-content-timestamp > p
+    - ischecked : ic-item-row ic-announcement-row > span > span
+
+3. announcement detail
+    - container : ic-Layout-contentMain
+
+4. module
+    - daily : item-group-condensed context_module                student-view completed ( if available)
+                item-group-condensed context_module                student-view collapsed_module completed context_module_hover
+            (or context_modules > div)
+    - module content : ul ig-list items context_module_items 
+    - content's content : ig-row  ig-published student-view
+        - pdf : ig-title title item_link (a)
+        - HW : ig-title title item_link (a)
+
+5. Assignment
+    - assignment module : item-group-condensed
+        - percentage : pill
+        - each assignment : assignment sort-disabled search_show
+        - link : > ig-info > a's href + name 
+        - status : status-description
+        - due : ig-details__item assignment-date-due > span
+        - score : score-display (total) + >b (myscore)
+
+6. files
+    - each file : ef-item-row
+    - download link : ef-name-col__link
+    - name : ef-name-col__text
+    - size : ef-size-col
+    - created : ef-date-created-col > span > span
+    - modified : ef-date-modified-col > span > span

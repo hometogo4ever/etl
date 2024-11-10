@@ -1,0 +1,133 @@
+{
+    "course": {
+        "2024-2 기계학습 (001)": {
+            "semester": "2024년 2학기",
+            "link": "https://myetl.snu.ac.kr/courses/268025",
+            "announcement": [
+                {
+                    "title": "Midterm grades updated",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/215758"
+                },
+                {
+                    "title": "Update on Today's Class (Nov 5) and Midterm Exam Claim Session",
+                    "date": "2024년 11월 5일 오후 12:27",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/215593"
+                },
+                {
+                    "title": "Midterm exam graded & Claim session schedule (Updated)",
+                    "date": "2024년 11월 4일 오후 8:42",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/215435"
+                },
+                {
+                    "title": "Announcement on midterm exam",
+                    "date": "2024년 11월 2일 오전 9:49",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/214806"
+                },
+                {
+                    "title": "Announcement on the TA session schedule (on Oct 29)",
+                    "date": "2024년 10월 24일 오후 2:16",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/211952"
+                },
+                {
+                    "title": "Announcement on the mid-term exam and upcoming class schedule (NO classes on Oct 29 and Oct 31)",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/210776"
+                },
+                {
+                    "title": "Homework 4 is out",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/210668"
+                },
+                {
+                    "title": "읽지 않은 메시지,\nHomework 2 Graded",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/206383"
+                },
+                {
+                    "title": "Homework 3 is out",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/205265"
+                },
+                {
+                    "title": "읽지 않은 메시지,\nNotice for Upcoming Video Lectures (Oct 8, 10, and 15)",
+                    "date": "2024년 10월 6일 오후 8:15",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/205250"
+                },
+                {
+                    "title": "읽지 않은 메시지,\nFinal exam time updated (Start moved up by 30 minutes, with date unchanged)",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/203658"
+                },
+                {
+                    "title": "Notice for Upcoming Class Schedule Changes (Oct 1, 3, 8, 10, and 15)",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/202892"
+                },
+                {
+                    "title": "읽지 않은 메시지,\nHomework 1 Graded",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/200692"
+                },
+                {
+                    "title": "Homework 2 is out",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/200249"
+                },
+                {
+                    "title": "Homework 1 is out",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/197315"
+                },
+                {
+                    "title": "Rescheduling final exam date (final exam time UPDATED!)",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/195058"
+                },
+                {
+                    "title": "Lecture room",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/193377"
+                },
+                {
+                    "title": "Mid-term and final exam schedule (final exam time UPDATED!)",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/192707"
+                },
+                {
+                    "title": "Homework template",
+                    "date": "",
+                    "link": "https://myetl.snu.ac.kr/courses/268025/discussion_topics/192678"
+                }
+            ]
+        },
+        "2024-2 자료구조 (001)": {
+            "semester": "2024년 2학기",
+            "link": "https://myetl.snu.ac.kr/courses/268064"
+        },
+        "2024-2 알고리즘 (001)": {
+            "semester": "2024년 2학기",
+            "link": "https://myetl.snu.ac.kr/courses/268021"
+        },
+        "2024-2 창의적통합설계1  (001)": {
+            "semester": "2024년 2학기",
+            "link": "https://myetl.snu.ac.kr/courses/268059"
+        },
+        "2024-2 프로그래밍의 원리 (001)": {
+            "semester": "2024년 2학기",
+            "link": "https://myetl.snu.ac.kr/courses/268016"
+        },
+        "2024-2 Computer Modeling (001)": {
+            "semester": "2024년 2학기",
+            "link": "https://myetl.snu.ac.kr/courses/268023"
+        }
+    },
+    "courselist": [
+        "2024-2 기계학습 (001)",
+        "2024-2 자료구조 (001)",
+        "2024-2 알고리즘 (001)",
+        "2024-2 창의적통합설계1  (001)",
+        "2024-2 프로그래밍의 원리 (001)",
+        "2024-2 Computer Modeling (001)"
+    ]
+}
