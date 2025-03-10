@@ -65,6 +65,9 @@ var ETLApiInstance = /** @class */ (function () {
             return response;
         });
     }
+    ETLApiInstance.prototype.getToken = function () {
+        return this.csrf_token;
+    };
     ETLApiInstance.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -115,8 +118,9 @@ var ETLApiInstance = /** @class */ (function () {
 var instance = ETLApiInstance.getInstance();
 instance.initialize().then(function () {
     instance
-        .login("2023-15725", "V5xErZMESuJAMUwT5IEoBXPjBlc77Qbu")
+        .login("2023-15725", "Qk9xDFdX00WkHmALArnOXRDhNmJAt6Se")
         .then(function (response) {
         console.log(response);
+        console.log(instance.getToken());
     });
 });

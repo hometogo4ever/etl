@@ -1,6 +1,8 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar, Cookie } from "tough-cookie";
+import { Course } from "./types/Courses";
+import { Notification, PlannableNotification } from "./types/Notification";
 
 class ETLApiInstance {
   private static instance: ETLApiInstance;
@@ -8,6 +10,10 @@ class ETLApiInstance {
   private jar: CookieJar;
 
   private csrf_token: string;
+
+  public getToken() {
+    return this.csrf_token;
+  }
 
   private constructor() {
     this.jar = new CookieJar();
@@ -63,7 +69,35 @@ class ETLApiInstance {
     return response;
   }
 
-  public async;
+  public async getCourses(): Promise<Course[]> {
+    if (!this.csrf_token) {
+      throw new Error("CSUF token is not initialized");
+    }
+    const response: AxiosResponse<Course[]> = await this.axiosInstance.get(
+      "/api/v1/dashboard/dashboard_cards"
+    );
+    return response.data;
+  }
+
+  public async getAlarms(): Promise<PlannableNotification[]> {
+    if (!this.csrf_token) {
+      throw new Error("CSUF token is not initialized");
+    }
+    const response: AxiosResponse<PlannableNotification[]> =
+      await this.axiosInstance.get("/api/v1/alarms");
+    return response.data;
+  }
+
+  public async getNotifications(course_id: number): Promise<Notification[]> {
+    if (!this.csrf_token) {
+      throw new Error("CSUF token is not initialized");
+    }
+    const response: AxiosResponse<Notification[]> =
+      await this.axiosInstance.get(
+        `/api/v1/courses/${course_id}/announcements?per_page=10`
+      );
+    return response.data;
+  }
 
   static getInstance() {
     if (!ETLApiInstance.instance) {
@@ -76,8 +110,9 @@ class ETLApiInstance {
 const instance = ETLApiInstance.getInstance();
 instance.initialize().then(() => {
   instance
-    .login("2023-15725", "V5xErZMESuJAMUwT5IEoBXPjBlc77Qbu")
+    .login("2023-15725", "Qk9xDFdX00WkHmALArnOXRDhNmJAt6Se")
     .then((response) => {
       console.log(response);
+      console.log(instance.getToken());
     });
 });
