@@ -1,0 +1,1598 @@
+<html lang="ko"><head>
+    <title>로그인 - 서울대학교 2단계 인증</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/sso/resources/snu/mfa/css/base.css" type="text/css">
+    <link rel="stylesheet" href="/sso/resources/snu/mfa/css/font.css" type="text/css">
+    <link rel="stylesheet" href="/sso/resources/snu/mfa/css/layer.css" type="text/css">
+    <link rel="stylesheet" href="/sso/resources/snu/mfa/css/style.css" type="text/css">
+    <link rel="icon" href="/sso/resources/snu/mfa/images/favicon.ico">
+    
+    <!--[if lt IE 10]>
+    <link rel="stylesheet" href="/sso/resources/snu/mfa/css/ie.css">
+    <![endif]-->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/html5.js"></script>
+    <![endif]-->
+    </head>
+    <body id="login" style="">
+    <!--Skip menu[E]-->
+    <div class="skipnav">
+            <a href="#contents">본문 바로가기</a>
+    </div>
+    <!--Skip menu[E]-->
+    <!-- header[S] -->
+    <header class="login">
+            <h1><a href="https://my.snu.ac.kr">서울대학교</a></h1>
+            <div id="korBtn" class="language" style="display:block">
+                    <a href="#">KOR</a>
+                    <span><a href="javascript:fnChangeLang('eng');">ENG</a></span>
+            </div>
+            <div id="engBtn" class="language" style="display:none">
+                    <a href="#">ENG</a>
+                    <span><a href="javascript:fnChangeLang('kor');">KOR</a></span>
+            </div>
+            <div class="login_tab" id="korHeader" style="display:block">
+                    <ul>
+    
+                                    <li class="on"><a href="javascript:;" class="tab-1" id="tab-1" data-tab="tab-1" title=" 선택됨">모바일 인증</a></li>
+                                    <li><a href="javascript:;" class="tab-2" id="tab-2" data-tab="tab-2">패스키</a></li>
+                                    <li><a href="javascript:;" class="tab-3" id="tab-3" data-tab="tab-3">인증서</a></li>
+                                    <li><a href="javascript:;" class="tab-4" id="tab-4" data-tab="tab-4">아이디</a></li>
+    
+    
+    
+                    </ul>
+            </div>
+    
+            <div class="login_tab" id="engHeader" style="display:none">
+                    <ul>
+    
+                                    <li class="on"><a href="javascript:;" class="tab-1" id="tab-1" data-tab="tab-1" title=" 선택됨">Mobile Auth</a></li>
+                                    <li><a href="javascript:;" class="tab-2" id="tab-2" data-tab="tab-2">Passkey</a></li>
+                                    <li><a href="javascript:;" class="tab-3" id="tab-3" data-tab="tab-3">Certificate</a></li>
+                                    <li><a href="javascript:;" class="tab-4" id="tab-4" data-tab="tab-4">ID / PW</a></li>
+    
+    
+    
+                    </ul>
+            </div>
+    </header>
+    <!-- header[E] -->
+    
+    <div id="innerDiv">
+    
+                                    <!--[S]로그인 내용시작-->
+                                    <div class="login_wrap">
+                                            <div class="login_tab_wrap">
+                                                    <div class="login_tab_inner" id="b_tab-1" style="display: block;">
+                                                            <div class="login_form">
+    
+                                                                    <div class="login_form_inner">
+                                                                            <h3>QR 로그인</h3>
+                                                                            <div class="login_icon_layout">
+                                                                                    <button id="btnQRTokenCreate" class="btn_login" data-popup="popup1" onclick="qrTokenCreate();">QR코드 생성</button>
+                                                                            </div>
+                                                                    </div>
+    
+                                                                    <div class="login_form_inner">
+                                                                            <h3>모바일 인증 로그인</h3>
+                                                                            <fieldset>
+                                                                                    <legend>모바일 인증 로그인</legend>
+                                                                                    <div>
+                                                                                            <ul>
+                                                                                                    <li><input type="text" name="push_login_id" id="push_login_id" title="아이디" placeholder="아이디 입력"></li>
+                                                                                            </ul>
+                                                                                            <div class="checkbox_id">
+                                                                                                    <input type="checkbox" id="push_id_keep" name="push_id_keep">
+                                                                                                    <label for="push_id_keep">아이디 저장</label>
+                                                                                            </div>
+                                                                                    </div>
+                                                                                    <button type="button" id="btnIDTokenCreateApp" class="btn_login bg_aqua" data-popup="popup2" onclick="idTokenCreateApp();">모바일 인증 요청</button>
+                                                                            </fieldset>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="create"><a href="javascript:linkRegist('push');">모 바일 인증 신규 등록</a></div>
+    
+                                                            <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162168476633505" target="_blank" class="help_text_btn"><span>도움말</span></a>
+    
+                                                    </div>
+    
+                                                    <div class="login_tab_inner" id="b_tab-2" style="display: none;">
+                                                            <div class="login_form">
+                                                                    <div class="login_form_inner">
+                                                                            <h3>패스키 로그인</h3>
+                                                                            <fieldset>
+                                                                                    <legend>패스키 로그인</legend>
+                                                                                    <div>
+                                                                                            <ul>
+                                                                                                    <li><input type="text" name="fido2_login_id" id="fido2_login_id" title="아이디" placeholder="아이디 입력"></li>
+                                                                                            </ul>
+                                                                                            <div class="checkbox_id">
+                                                                                                    <input type="checkbox" id="fido2_id_keep" name="fido2_id_keep">
+                                                                                                    <label for="fido2_id_keep">아이디 저장</label>
+                                                                                            </div>
+                                                                                    </div>
+                                                                                    <button type="button" id="btnIDTokenCreateFido2" class="btn_login" onclick="idTokenCreateFido2();">패스키 인증</button>
+                                                                            </fieldset>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="create"><a href="javascript:linkRegist('fido2');">패스키 신규 등록</a></div>
+    
+                                                            <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162268218289488" target="_blank" class="help_text_btn"><span>도움말</span></a>
+    
+                                                    </div>
+    
+                                                    <div class="login_tab_inner" id="b_tab-3" style="display: none;">
+                                                            <div class="login_form">
+                                                                    <div class="login_form_inner">
+                                                                            <h3>인증서 로그인</h3>
+                                                                            <div class="login_icon_layout cert">
+                                                                                    <button class="btn_login" onclick="Sign_with_vid_user(12,'',srvCert,SignDataWithVID_callback);">공동인증서 로그인</button>
+                                                                            </div>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="create"><a href="https://nsso.snu.ac.kr/sso/usr/self/certReg">인증서 신규 등록</a></div>
+    
+                                                            <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162389259157488" target="_blank" class="help_text_btn"><span>도움말</span></a>
+    
+                                                    </div>
+    
+                                                    <!-- <div class="text_box" id="id_text_box" style="display:none;">
+                                                            <strong>아이디 로그인 후 "추가인증" 은 단계적 적용 예정</strong>
+                                                            <p>(1차) 직원 적용 : 9.9. &nbsp; &nbsp;(2차) 전체 이용자 적용 : 9. 30.</p>
+                                                    </div> -->
+    
+                                                    <div class="login_tab_inner" id="b_tab-4" style="display: none;">
+    
+                                                            <div class="login_form">
+                                                                    <div class="login_form_inner">
+                                                                            <h3>아이디 로그인</h3>
+                                                                            <fieldset>
+                                                                                    <legend>아이디 로그인</legend>
+                                                                                    <div>
+                                                                                            <ul>
+                                                                                                    <li><input type="text" name="login_id" id="login_id" title="아이디" placeholder="아이디 입력"></li>
+                                                                                                    <li><input type="password" name="login_pwd" id="login_pwd" title="비밀번호" placeholder="비밀번호 입력"></li>
+                                                                                            </ul>
+                                                                                            <div class="checkbox_id">
+                                                                                                    <!-- <input type="checkbox" id="check_03" name="check_type03"> -->
+                                                                                                    <input type="checkbox" id="id_keep" name="id_keep">
+                                                                                                    <label for="id_keep">아 이디 저장</label>
+                                                                                            </div>
+                                                                                    </div>
+                                                                                    <button class="btn_login" data-popup="popup3" id="loginProcBtn" onclick="loginProc()">로그인</button>
+    
+                                                                                    <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162501847946102" target="_blank" class="help_text_btn"><span>도움말</span></a>
+    
+                                                                            </fieldset>
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+    
+                                            </div>
+    
+                                            <div class="join_link_wrap">
+                                                    <ul>
+                                                            <li><a href="https://nsso.snu.ac.kr/sso/usr/self/regist">계정 신청</a></li>
+                                                            <li><a href="https://nsso.snu.ac.kr/sso/usr/self/searchId">아이 디 찾기</a></li>
+                                                            <li><a href="https://nsso.snu.ac.kr/sso/usr/self/searchPw">비밀 번호 찾기</a></li>
+                                                            <li><a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA" target="_blank">도움말</a></li>
+                                                    </ul>
+                                            </div>
+    
+                                            <div class="help_text_wrap colum" id="help_tab-1" style="display: block;">
+                                                    <div class="help_text">
+                                                            <div class="help_text_inner">
+                                                                    <div class="help_wrap">
+                                                                            <ul>
+                                                                                    <li>
+                                                                                            <strong>모바일 인증이란? <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162168476633505" target="_blank">자세히 보기 +</a></strong>
+                                                                                            <p>Pass-Ni Smart Login 앱을 이용한 QR코드 스캔 혹은 아이디 입력 만으로 생체인증, 패턴, PIN 인증을 거쳐 비밀번호 없이 한 번의 인증으로 로그인할 수 있습니다.</p>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                            <strong>모바일 인증을 이용 하시 려면</strong>
+                                                                                            <p>
+                                                                                                    Pass-Ni Smart Login 앱  설치 후 최초 1회 인증 수단을 등록한 뒤에 로그인할 수 있습니다. 모바일 인증 신규 등록 버튼을 통해 모바일 인증을 등록해 보세요.<br>
+                                                                                                    등록은 사용자 확인 및 본인 인증을 거친 이후 설치한 Pass-Ni Smart Login 앱을 통해 등록 화면의 QR 코드를 스캔하여 간편하게 등록할 수 있습니다.
+                                                                                            </p>
+                                                                                    </li>
+                                                                            </ul>
+                                                                    </div>
+                                                                    <div class="help_wrap">
+                                                                            <ul>
+                                                                                    <li>
+                                                                                            <strong>모바일 인증 로그인 절차 </strong>
+                                                                                            <ul>
+                                                                                                    <li>
+                                                                                                            <strong>QR 로그 인 </strong>
+                                                                                                            <ol>
+                                                                                                                    <li>① QR 코드 생성</li>
+                                                                                                                    <li>② 모바일 앱을 실행하여 생성된 QR 코드 스캔</li>
+                                                                                                                    <li>③ 생체인증, 패턴, PIN 중 모바일 앱 내 설정한 인증 수단 인증</li>
+                                                                                                            </ol>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                            <strong>모바일  인증 로그인 </strong>
+                                                                                                            <ol>
+                                                                                                                    <li>① ID 입력 후 모바일 인증 요청</li>
+                                                                                                                    <li>② PUSH 알림을 통해 모바일 앱 접속</li>
+                                                                                                                    <li>③ 화면에 표시된 숫자 선택 후 모바일 앱 내 설정한 인증 수단 인증</li>
+                                                                                                            </ol>
+                                                                                                    </li>
+                                                                                            </ul>
+                                                                                    </li>
+                                                                            </ul>
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                            <div class="help_text_wrap" id="help_tab-2" style="display: none;">
+    
+                                                    <div class="help_text">
+                                                            <strong>패스키 로그인이란? <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162268218289488" target="_blank">자세히 보기 +</a></strong>
+                                                            <p>
+                                                            패스키는 비밀번호를 대신해 간편하고 안전하게 로그인할 수 있는 수단입니다. 지문, 얼굴 스캔 또는 PIN만으로 로그인해 보세요.<br>
+                                                            해당 로그인을 위해서는 패스키 등록이 필요합니다. 등록을 위해 도 움말의 패스키 매뉴얼을 참고해주세요.
+                                                            </p>
+                                                    </div>
+                                            </div>
+                                            <div class="help_text_wrap" id="help_tab-3" style="display: none;">
+                                                    <div class="help_text">
+                                                            <strong>인증서 로그인이란? <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162389259157488" target="_blank">자세히 보기 +</a></strong>
+                                                            <p>서울대학교 포털 가입자를 대상으로 공동인증서를 이용해 로그인 할 수 있는 기능입니다.<br><b>서울대학교 포털을 먼저 가입한 후 인증서를 등록한 뒤에 이용 가능</b>합니다.</p>
+                                                    </div>
+                                            </div>
+                                            <div class="help_text_wrap" id="help_tab-4" style="display: none;">
+                                                    <div class="help_text">
+                                                            <strong>아이디 로그인이란? <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3860162501847946102" target="_blank">자세히 보기 +</a></strong>
+                                                            <p>
+                                                            기존 아이디, 비밀번호 로그인을 진행한 뒤에 SMS 또는 Email을 이용한 추가 인증을 거쳐 로그인 할 수 있습니다.<br>
+                                                            추가 인증 화면의 <b>'이 브라우저에서 추가 인증 사용 안함'</b> 체크박스를 선택하면 다음 로그인부터 해당 브라우저에서 추가 인증 없이 로그인할 수 있습니다.<br>
+                                                            (주의) <b>'이 브라우저에서 추가 인증 사용 안함'</b> 은 신뢰할 수 있는 본인 기기에서만 사용하고, 여러 사용자가 사용하는 공용 기기에서는 사용을 자제해 주세요.
+                                                            </p>
+                                                    </div>
+                                            </div>
+                                    </div>
+                                    <!--[E]로그인 내용 끝-->
+    
+                            <div class="bg_overlay"></div>
+                            <!--  QR코드 생성 팝업 -->
+                            <div id="popup1" class="layer_popup">
+                                    <div class="layer_popup_wrap">
+                                            <div class="popup_wrap">
+                                                    <h1 class="p_tit">QR 로그인</h1>
+                                                    <p class="tac">모바일 인증 모바일앱(Smart Login)에서 해당 인증 수단의 QR 카메라로 스캔해주세요.</p>
+                                                    <div class="auth_create">
+    
+                                                            <span id="qrcode_image" class="qr_img"></span>
+                                                            <p class="loding_time">남은 시간 : <em class="c_red" id="qr_countdown"></em> <em class="ml15"><img src="/sso/resources/snu/mfa/images/loding.gif" alt="로딩"></em></p>
+                                                    </div>
+                                                    <p class="font_type mb30">모바일 인증 앱에서 인증 완료 후(인증 완료) 버 튼을 클릭해주세요.</p>
+                                                    <div class="btn_wrap flex_col">
+                                                            <button class="btn_basic" id="qr_complete" onclick="fnUserAuthQR()">인증 완료</button>
+                                                            <button id="btnQRTokenCreateRe" class="btn_basic bg_gray" onclick="qrTokenCreate();">QR코드 갱신</button>
+                                                    </div>
+                                                    <a href="javascript:popupClose('qr');" class="pop_close">팝업 닫기</a>
+                                            </div>
+                                    </div>
+                            </div>
+                            <!--  //QR코드 생성 팝업 -->
+                            <!--  인증번호 팝업 -->
+                            <div id="popup2" class="layer_popup">
+                                    <div class="layer_popup_wrap">
+                                            <div class="popup_wrap">
+                                                    <h1 class="p_tit">모바일 인증 로그인</h1>
+                                                    <p class="tac">모바일 인증 모바일앱(Smart Login)에서 표시된 번호 중 화면에 보이는 번호를 선택하여 주십시오.</p>
+                                                    <div class="auth_create">
+                                                            <div class="nember_wrap">
+                                                                    <span id="crtfc_no"></span>
+                                                            </div>
+                                                            <p class="loding_time">남은 시간 : <em class="c_red" id="push_countdown"></em> <em class="ml15"><img src="/sso/resources/snu/mfa/images/loding.gif" alt="로딩"></em></p>
+                                                    </div>
+                                                    <p class="font_type mb30">모바일 인증 앱에서 인증 완료 후(인증 완료) 버 튼을 클릭해주세요.</p>
+                                                    <div class="btn_wrap flex_col">
+                                                            <button class="btn_basic" id="push_complete" onclick="fnUserAuthPush()">인증 완료</button>
+                                                            <button class="btn_basic bg_gray" style="display: none;">QR코드 갱신</button>
+                                                    </div>
+                                                    <a href="javascript:popupClose('push');" class="pop_close">팝업 닫기</a>
+                                            </div>
+                                    </div>
+                            </div>
+                            <!--  //인증번호 팝업 -->
+                            <!--  아이디 로그인 본인인증 팝업 -->
+                            <div id="popup3" class="layer_popup">
+                                    <div class="layer_popup_wrap">
+                                            <div class="popup_wrap">
+                                                    <h1 class="p_tit">추가 인증</h1>
+                                                    <div class="pop_table_wrap">
+                                                            <ul>
+                                                                    <li>
+                                                                            <label for="popup3_login_id">아이디</label>
+                                                                            <input type="text" name="popup3_login_id" id="popup3_login_id" title="아이디" value="" disabled="">
+                                                                    </li>
+                                                                    <li>
+                                                                            <label>인증 수단 선택</label>
+                                                                            <div class="auth_wrap">
+    
+                                                                                    <div class="radio_box mb5">
+    
+                                                                                            <span>
+                                                                                                    <input type="radio" id="radio-box01" name="radio-box" title="외부 이메일" onclick="authMethodsChange('mail')" checked="">
+                                                                                                    <label for="radio-box01">외부 이메일</label>
+                                                                                            </span>
+    
+                                                                                            <span class="ml15">
+                                                                                                    <input type="radio" id="radio-box02" name="radio-box" title="휴대전화" onclick="authMethodsChange('sms')">
+                                                                                                    <label for="radio-box02">휴대전화</label>
+                                                                                            </span>
+    
+    
+                                                                                    </div>
+    
+                                                                                    <div class="input_form_wrap">
+                                                                                            <input type="hidden" name="mail" id="mail" value="">
+                                                                                            <input type="hidden" name="sms" id="sms" value="">
+                                                                                            <input type="hidden" name="auth_methods" id="auth_methods" value="mail">
+                                                                                            <input type="text" name="auth_methods_info" id="auth_methods_info" title="인증 수단 정보" class="flex_1" value="" disabled="">
+                                                                                            <button class="btn_basic_s" onclick="authNoSend()">인증코드 전송</button>
+                                                                                    </div>
+                                                                                    <div class="input_form_wrap">
+                                                                                            <input type="text" name="id_crtfc_no" id="id_crtfc_no" title="인증코드" class="flex_1" placeholder="인증코드 입력">
+                                                                                            <em class="code" id="id_countdown"></em>
+                                                                                    </div>
+                                                                            </div>
+                                                                    </li>
+                                                            </ul>
+                                                    </div>
+                                                    <div class="btn_wrap flex_col">
+                                                            <button class="btn_basic" onclick="fnUserAuthId();">인증 확인</button>
+                                                    </div>
+                                                    <div class="checkbox_id">
+                                                            <input type="checkbox" id="bypass_check" name="bypass_check">
+                                                            <label for="bypass_check">이 브라우저에서 추가 인증 사용 안함</label>
+                                                    </div>
+                                                    <div class="checkbox_id" id="info_null" style="display: none;">
+                                                            <a href="https://snu.gov-dooray.com/share/pages/U9uaqeGlRL6kdiGGG8bFXA/3853830780239769885" target="_blank" style="color:#1B3B86;">&nbsp; ※ 외부이메일, 휴대전화 정보가 공란인 경우(클릭)</a>
+                                                    </div>
+                                                    <a href="javascript:popupClose('id');" class="pop_close">팝업 닫기</a>
+                                            </div>
+                                    </div>
+                            </div>
+                            <!--  //아이디 로그인 본인인증 팝업 -->
+    
+                    <!--[S]하단footer -->
+                    <footer>
+                            <a onclick="window.open('https://www.snu.ac.kr/personal_information')">개인정보처리방침</a>
+                            <address>
+                                    08826 서울특별시 관악구 관악로 1 서울대학교 TEL 02-880-5114 FAX 02-885-5272
+                                    <p>COPYRIGHT (C)2022 SEOUL NATIONAL UNIVERSITY. ALL RIGHTS RESERVED</p>
+                            </address>
+                    </footer>
+                    <!--[E]하단footer -->
+    
+            </div>
+    
+    <form id="registForm" name="registForm" method="post" action="https://mfalogin.snu.ac.kr/mfa/user/snu/regist/step">
+            <input type="hidden" id="crtfc_type" name="crtfc_type">
+            <input type="hidden" id="lang" name="lang">
+            <input type="hidden" id="return_url" name="return_url" value="https://nsso.snu.ac.kr/sso/usr/snu/mfa/login/view">
+            <input type="hidden" id="lnksys_id" name="lnksys_id" value="snu-mfa-sso">
+    </form>
+    
+    <form id="loginForm" name="loginForm" method="post" action="">
+            <input type="hidden" id="user_data" name="user_data" value="">
+            <input type="hidden" id="page_lang" name="page_lang" value="">
+            <input type="hidden" id="login_key" name="login_key" value="91AF925BF1A8B93DF391411A23171548">
+            <input type="hidden" id="pwd_type" name="pwd_type" value="">
+    </form>
+    
+    <form id="PwdFailForm" name="PwdFailForm" method="post" action="">
+            <input type="hidden" id="pwUserId" name="pwUserId">
+            <input type="hidden" id="pwLoginDe" name="pwLoginDe">
+            <input type="hidden" id="pwFailCnt" name="pwFailCnt">
+            <input type="hidden" id="pwData" name="pwData">
+    </form>
+    
+    <form id="BlackListForm" name="BlackListForm" method="post" action="">
+            <input type="hidden" id="blUserId" name="blUserId">
+            <input type="hidden" id="blLoginDe" name="blLoginDe">
+    </form>
+    
+    <form id="SleeperAccntForm" name="SleeperAccntForm" method="post" action="">
+            <input type="hidden" id="saUserId" name="saUserId">
+            <input type="hidden" id="sleep_login_key" name="login_key" value="91AF925BF1A8B93DF391411A23171548">
+    </form>
+    
+    <form id="form_SignDataWithVID" name="form_SignDataWithVID" method="post">
+            <input type="hidden" id="aSignedMsg" name="aSignedMsg">
+            <input type="hidden" id="aVidMsg" name="aVidMsg">
+            <input type="hidden" id="cert_login_key" name="cert_login_key" value="91AF925BF1A8B93DF391411A23171548">
+    </form>
+    
+    <script type="text/javascript" src="/sso/resources/js/jsbn/jsbn.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/jsbn/jsbn2.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/jsbn/prng4.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/jsbn/rng.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/jsbn/ec.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/jsbn/sec.js"></script>
+    
+    <script type="text/javascript" src="/sso/resources/js/crypto/seed.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/crypto/pad-ansix923-min.js"></script>
+    
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/util/countdown.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/util/qr.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/util/base64.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/usr/js/common.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/common-lang.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/common-policy.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/common.js"></script>
+    <script type="text/javascript" src="/sso/resources/js/login/login.js?version=20240802"></script>
+    
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/lib/u2f-api-1.1.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/lib/text-encoding-0.7.0/encoding.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/lib/text-encoding-0.7.0/encoding-indexes.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/lib/fetch/fetch.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/lib/base64js/base64js-1.3.0.min.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/base64url.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/webauthn.js"></script>
+    <script type="text/javascript" src="/sso/resources/snu/mfa/js/fido2/webauthn-ubi.js"></script>
+    
+    <!-- AnySign 스크립트 -->
+    <script type="text/javascript" src="/sso/common/anySign/anySign4PCInterface.js"></script><!-- AnySign stylesheet --><link rel="stylesheet" id="anySignCSS" type="text/css" href="/sso/common/anySign/AnySign4PC/css/common.css?version=20190705"><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/promise-6.1.0.js?version=20190705"></script><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/crossStorageClient.min.js?version=20190705"></script><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/xcryptoCore_min.js?version=20190705"></script><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/SecureProto.js?version=20190705"></script><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/xcrypto_min.js?version=20190705"></script><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/FileSaver.min.js?version=20190705"></script><script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/integrity_min.js?version=20190705"></script>
+    <script type="text/javascript" src="/sso/common/anySign/AnySign4PC/ext/jquery-1.11.2.min.js"></script>
+    
+    <script type="text/javascript">
+    
+    var srvCert = '';
+    srvCert += '-----BEGIN CERTIFICATE-----\n';
+    srvCert += 'MIIDGTCCAoKgAwIBAgIEBo53lTANBgkqhkiG9w0BAQQFADBhMQswCQYDVQQGEwJL\n';
+    srvCert += 'UjELMAkGA1UECBMCYWExCzAJBgNVBAcTAmFhMQswCQYDVQQKEwJhYTELMAkGA1UE\n';
+    srvCert += 'CxMCYWExCzAJBgNVBAMTAmFhMREwDwYJKoZIhvcNAQkBFgJhYTAeFw0wMTA3MTgw\n';
+    srvCert += 'MDAwMDBaFw0wNjA3MTcwNDE4MDBaMGcxCzAJBgNVBAYTAktSMQwwCgYDVQQIEwNp\n';
+    srvCert += 'aWkxDDAKBgNVBAcTA2lpaTEMMAoGA1UEChMDaWlpMQwwCgYDVQQLEwNpaWkxDDAK\n';
+    srvCert += 'BgNVBAMTA2lpaTESMBAGCSqGSIb3DQEJARYDaWlpMIGfMA0GCSqGSIb3DQEBAQUA\n';
+    srvCert += 'A4GNADCBiQKBgQCzSWuMplCOF2v/RGL6xENjTH5SFMXKlcJbnebTm1ZuENjc5KHo\n';
+    srvCert += 'fW6t89qkHznyHlllWwVSv8bNm5u6TK5fNFY4RC95cU8jqAVK0oFRLRjkDAfoMVV1\n';
+    srvCert += 'fD5eoXmN6fyZWtLgiHXQ9evISBP62UkT5KjQ86dDKo2Dg53XFVyKI+ksAwIDAQAB\n';
+    srvCert += 'o4HXMIHUMGoGCWCGSAGG+EIBDQRdFltZb3VyIENlcnRpZmljYXRlIGlzIGR1ZSB1\n';
+    srvCert += 'cHRvIDEgeWVhci4gWW91IGhhdmUgdG8gcmVpc3N1ZSB5b3VyIGNlcnRpZmljYXRl\n';
+    srvCert += 'IGJlZm9yZSBpdCBleHBpcmVzMCIGCWCGSAGG+EIBAgQVFhN3d3cuc29mdGZvcnVt\n';
+    srvCert += 'LmNvLmtyMBEGCWCGSAGG+EIBAQQEAwIAgDAvBglghkgBhvhCAgUEIhYgZDQxZDhj\n';
+    srvCert += 'ZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2UwDQYJKoZIhvcNAQEEBQADgYEAPeWZ\n';
+    srvCert += 'SPTLWtdsNNrztq//3agTQImdn2Yrds5Rhf1Y2FZ+sXdZvPLBy3+p1eh4zy0IVyjm\n';
+    srvCert += 'AioAO9U//TuZfeHlOs6ffsBc87D3BaBH0CUdQxaPy99AtUrVnGxNjJ3QjSesiPxf\n';
+    srvCert += 'kcIPWgTrDozCmSKh0lr8MKzB0PpML7gpLkE6ZNQ=\n';
+    srvCert += '-----END CERTIFICATE-----\n';
+    srvCert += '';
+    
+    
+    
+            var html_ko = $('#korDiv').html();
+            var html_en = $('#engDiv').html();
+    
+            var language = getCookie('snuSso.pageLang');
+    
+            if( language == '' ){
+                    language = (window.navigator.userLanguage != null ? window.navigator.userLanguage : window.navigator.language);
+                    language = (language.toLowerCase() === 'ko-kr' || 'ko') ? 'kor' : 'eng';
+            }
+    
+            var sesUrl = '/sso/usr/snu/login/link';
+            var mfaAuthUrl = '/sso/usr/snu/mfa/login/auth';
+            var mfaCertAuthUrl = '/sso/usr/snu/mfa/login/cert/certAuth'
+    
+            var _login_type = getCookie('smlt'); //최근 로그인 타입
+            var _countdownFlag = false; //카운트 다운 실행 여부
+            var _interval; //인터벌 실행 여부
+            var authNosendChk = false; //추가인증 인증코드 전송 여부
+    
+            $(document).ready(function() {
+    
+                    if ( language == 'eng' ) {
+                            $('#korHeader').attr('style','display:none');
+                            $('#engHeader').attr('style','display:block');
+                    } else {
+                            $('#korHeader').attr('style','display:block');
+                            $('#engHeader').attr('style','display:none');
+                    }
+                    openNoticePopup(language);
+                    //SAVE ID 체크 관련
+                    var idKeep = getCookie('snuLogin.idKeep');
+    
+                    if ( idKeep != '') {
+                            $('#push_login_id').val(idKeep);
+                            $('#fido2_login_id').val(idKeep);
+                            $('#login_id').val(idKeep);
+    
+                            document.getElementsByName('push_id_keep')[0].checked = true;
+                            document.getElementsByName('fido2_id_keep')[0].checked = true;
+                            document.getElementsByName('id_keep')[0].checked = true;
+    
+                    }
+    
+                    keyModule.init( '/sso/usr/snu/login/init' );
+    
+                    //마지막 로그인을 기본 로그인 탭으로 설정
+                    if ( 'true' == 'false' && _login_type == 'cert' ) {
+                            _login_type = 'push';
+                    }
+    
+                    loginTypeChange(_login_type);
+    
+    
+                    //각 로그인 별 input에서 엔터 입력 시 해당 로그인 인증으로 이동
+                    $('#b_tab-1 input').keypress( function(e) {
+                        if( e.keyCode == 13 ) {
+                            idTokenCreateApp();
+                        }
+                    });
+    
+                    $('#b_tab-2 input').keypress( function(e) {
+                        if( e.keyCode == 13 ) {
+                            idTokenCreateFido2();
+                        }
+                    });
+    
+                    $('#b_tab-4 input').keypress( function(e) {
+                        if( e.keyCode == 13 ) {
+                            loginProc();
+                        }
+                    });
+    
+                    $('#id_crtfc_no').keypress( function(e) {
+                        if( e.keyCode == 13 ) {
+                            fnUserAuthId();
+                        }
+                    });
+    
+    
+            });
+    
+            //마지막 로그인에 따른 로그인 탭 변경
+            function loginTypeChange(login_type) {
+    
+                    $('.login_tab > ul > li').removeClass("on");
+                    $('.login_tab > ul > li > a').removeAttr("title");
+    
+                    // 모든 .login_tab_inner와 .help_text 요소를 숨깁니다.
+                    $('.login_tab_inner').hide();
+                    $('.help_text_wrap').hide();
+    
+                    $('#login').show();
+    
+                    if ( login_type == '' || login_type == 'push' ) {
+                            $('.tab-1').parent().addClass("on");
+                            $('.tab-1').attr("title", "선택됨");
+    
+                            // tab_id에 해당하는 특정 .login_tab_inner 요소를 표시합니다.
+                            $("#b_tab-1").show();
+    
+                            // tab_id에 해당하는 특정 .help_text 요소를 표시합니다.
+                            $("#help_tab-1").show();
+    
+                            $('#push_login_id').focus();
+    
+                    } else if ( login_type == 'fido2' ) {
+                            $('.tab-2').parent().addClass("on");
+                            $('.tab-2').attr("title", "선택됨");
+    
+                            // tab_id에 해당하는 특정 .login_tab_inner 요소를 표시합니다.
+                            $("#b_tab-2").show();
+    
+                            // tab_id에 해당하는 특정 .help_text 요소를 표시합니다.
+                            $("#help_tab-2").show();
+    
+                            $('#fido2_login_id').focus();
+    
+                    } else if ( login_type == 'cert' ) {
+                            $('.tab-3').parent().addClass("on");
+                            $('.tab-3').attr("title", "선택됨");
+    
+                            // tab_id에 해당하는 특정 .login_tab_inner 요소를 표시합니다.
+                            $("#b_tab-3").show();
+    
+                            // tab_id에 해당하는 특정 .help_text 요소를 표시합니다.
+                            $("#help_tab-3").show();
+    
+                    } else if ( login_type == 'id' ) {
+                            $('.tab-4').parent().addClass("on");
+                            $('.tab-4').attr("title", "선택됨");
+    
+                            // tab_id에 해당하는 특정 .login_tab_inner 요소를 표시합니다.
+                            $("#b_tab-4").show();
+    
+                            // tab_id에 해당하는 특정 .help_text 요소를 표시합니다.
+                            $("#help_tab-4").show();
+    
+                            //$('#id_text_box').css('display', 'block');
+    
+                            $('#login_id').focus();
+                    }
+    
+            }
+    
+    
+            //QR코드 생성 버튼 클릭 시
+            function qrTokenCreate() {
+    
+                    $.ajax({
+                    url: '/sso/usr/snu/mfa/login/push/ajaxQRTokenCreate',
+                    type: 'post',
+                    data: {login_key:$('#login_key').val()},
+                    dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+                            if(response_data.result) {
+                                    var qr_message = response_data.qr_message;
+                                            //qr_message = qr_message.replaceAll('&quot;', '"');
+                                            qr_message = qr_message.replace(new RegExp('&quot;', 'g'), '"');
+    
+                                    qrcodeCreate(qr_message);
+    
+                                    if (_countdownFlag) { //QR코드 갱신 시
+                                            Countdown.init();
+    
+                                    } else {//최초 QR코드 생성 시
+                                            _countdownFlag = true;
+    
+                                            Countdown.start(3, function() {
+                                                            alert(CommonLang.getMessage('qr.time.expired.msg'));
+                                                            clearInterval(_interval);
+                                                            _countdownFlag = false;
+    
+                                                            //QR인증 레이어 fade out
+                                                            $('#popup1').fadeOut();
+                                                    $('.bg_overlay').fadeOut();
+                                                    }, 'qr_countdown', 'N');
+    
+                                            _interval = setInterval('fnUserAuthQR()', 2000);
+                                    }
+    
+                                    //QR로그인 레이어 fadeIn
+                                    $('#popup1').fadeIn();
+                                    $('.bg_overlay').fadeIn();
+    
+                                    //QR 인증 완료 버튼 focus
+                                    $('#qr_complete').focus();
+    
+                                    trapFocus('#popup1', '#qr_complete', '.pop_close');
+    
+                            } else {
+                                    if (response_data.error_code == 'ESY010') {
+                                                    alert(CommonLang.getMessage('push.qr_code.error', response_data.error_code));
+                                            } else if (response_data.error_code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.error_code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.error_code));
+                                            }
+                            }
+                    },
+                    error: function ()
+                    {
+                            alert(CommonLang.getMessage('error.conect'));
+                    }
+            });
+    
+            }
+    
+    
+            //모바일 인증 요청 클릭 시
+            function idTokenCreateApp() {
+    
+                    var push_login_id = $('#push_login_id').val();
+    
+                    if( push_login_id == '' ) {
+                            alert(CommonLang.getMessage('input.id.empty.msg'));
+                            $('#push_login_id').focus();
+                            return;
+                    }
+    
+                    $.ajax({
+                    url: '/sso/usr/snu/mfa/login/push/ajaxIDTokenCreate',
+                    type: 'post',
+                    data: {user_id:push_login_id,crtfc_type:'push',login_key:$('#login_key').val()},
+                    dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+    
+                            if (response_data.result) {
+                                    $('#crtfc_no').text(response_data.crtfc_no);
+    
+                                    Countdown.start(3, function() {
+                                                    alert(CommonLang.getMessage('time.expired.msg'));
+                                                    clearInterval(_interval);
+    
+                                                    //모바일 인증 레이어 fade out
+                                                    $('#popup2').fadeOut();
+                                            $('.bg_overlay').fadeOut();
+                                            }, 'push_countdown', 'N');
+    
+                                    //인증 완료 자동 체크
+                                    _interval = setInterval('fnUserAuthPush()', 2000);
+    
+                                    //모바일 인증 레이어 fadeIn
+                                    $('#popup2').fadeIn();
+                                    $('.bg_overlay').fadeIn();
+    
+                                    //모바일 인증 완료 버튼 focus
+                                    $('#push_complete').focus();
+    
+                                    trapFocus('#popup2', '#push_complete', '.pop_close');
+    
+                            } else {
+                                    if (response_data.error_code == 'ESY007') {
+                                                    alert(CommonLang.getMessage('error.push.ESY007'));
+                                            } else if (response_data.error_code == 'ESY011') {
+                                                    alert(CommonLang.getMessage('error.push.ESY011'));
+                                            } else if (response_data.error_code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.error_code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.error_code));
+                                            }
+                            }
+    
+                    },
+                    error: function ()
+                    {
+                            alert(CommonLang.getMessage('error.connect'));
+                    }
+            });
+            }
+    
+            //패스키 인증 클릭 시
+            function idTokenCreateFido2() {
+    
+                    var fido2_login_id = $('#fido2_login_id').val();
+    
+                    if( fido2_login_id == '' ) {
+                            alert(CommonLang.getMessage('input.id.empty.msg'));
+                            $('#fido2_login_id').focus();
+                            return;
+                    }
+    
+                    $.ajax({
+                    url: '/sso/usr/snu/mfa/login/fido2/ajaxIDTokenCreate',
+                    type: 'post',
+                    data: {user_id:fido2_login_id,crtfc_type:'fido2',login_key:$('#login_key').val()},
+                    dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+    
+                            if (response_data.result) {
+    
+                                    fido2LoginOption('https://mfalogin.snu.ac.kr/mfa', response_data.id_token);
+    
+                            } else {
+                                    if (response_data.error_code == 'ESY007') {
+                                                    alert(CommonLang.getMessage('error.fido2.ESY007'));
+                                            } else if (response_data.error_code == 'ESY011') {
+                                                    alert(CommonLang.getMessage('error.fido2.ESY011'));
+                                            } else if (response_data.error_code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.error_code));
+                                            } else if (response_data.error_code == 'EAU029') {
+                                                    alert(CommonLang.getMessage('error.EAU029', response_data.error_code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.error_code));
+                                            }
+                            }
+    
+    
+                    },
+                    error: function ()
+                    {
+                            alert(CommonLang.getMessage('error.connect'));
+                    }
+            });
+    
+            }
+    
+            //아이디, 비밀번호 로그인 클릭 시
+            function loginProc() {
+    
+                    var login_id = $('#login_id').val();
+                    var login_pwd = $('#login_pwd').val();
+    
+                    var response_data = loginModule.auth(mfaAuthUrl);
+    
+                    if( response_data != null ) {
+                            var code = response_data.code;
+                            var message = loginModule.message(response_data);
+    
+                            if ( code.startsWith("SS") ) {
+    
+                                    //아이디 저장 여부에 따라 Cookie 설정
+                                    if( $("#id_keep").is(":checked") ){
+                                            setCookie('snuLogin.idKeep', $('#login_id').val(), '30');
+                                    } else {
+                                            deleteCookie('snuLogin.idKeep');
+                                    }
+    
+                                    if ( response_data.bypass == 'Y' ) {//추가 인증 생략일 시 로그인 처리
+    
+                                            //마지막 로그인 타입 지정
+                                    setCookie('smlt', 'id', '30');
+    
+                                            if( code == 'SS0001' || code == 'SS0004' ) {
+                                                    $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                            } else if( code == 'SS0009' ) {
+    
+                                                    if( confirm( message ) ) {
+                                                            $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                                    } else {
+                                                            $('#login_id').focus();
+                                                    }
+    
+                                            } else if( code == 'SS0005' || code == 'SS0008' ) {
+                                                    alert( message );
+                                                    $('#pwd_type').val( code );
+                                                    $('form[name=loginForm]').attr('action', '/sso/usr/snu/login/password/view').submit();
+    
+                                            } else if( code == 'SS0034' ) {
+                                                    $('#blUserId').val( $('#login_id').val() );
+                                                    $('#blLoginDe').val( response_data.loginDe );
+    
+                                                    $('form[name=BlackListForm]').attr('action', '/sso/usr/snu/login/blackListView').submit();
+    
+                                            } else if ( code == 'SS0006') {// 휴면계정
+                                                    $('#saUserId').val( $('#login_id').val() );
+                                                    $('form[name=SleeperAccntForm]').attr('action', '/sso/usr/self/sleeperAccnt').submit();
+    
+                                            }
+    
+                                    } else {//추가 인증 진행
+    
+                                            if ( response_data.error_code == '' ) {
+                                                    $('#popup3_login_id').val(login_id);
+                                            $('#mail').val(response_data.outsid_email);
+                                            $('#sms').val(response_data.handp_no);
+    
+                                            if ( response_data.outsid_email == '' || response_data.handp_no == '' ) {
+                                                    $('#info_null').show();
+                                            }
+    
+                                            $('#radio-box01').prop("checked", true);
+                                            $('#auth_methods').val('mail');
+                                            $('#auth_methods_info').val(response_data.outsid_email);
+    
+                                            //추가 인증 레이어 fadeIn
+                                            $('#popup3').fadeIn();
+                                            $('.bg_overlay').fadeIn();
+    
+                                            $('#radio-box01').focus();
+    
+                                        trapFocus('#popup3', '#radio-box01', '.pop_close');
+    
+    
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.error_code));
+                                            }
+    
+                                    }
+    
+                            } else if( code == 'EAU006' || code == 'EAU007' || code == 'EAU013' ) {
+                                    alert( message );
+                                    location.href = 'https://my.snu.ac.kr/passni/sample/loginProc.jsp';
+    
+    
+                            } else if( code == 'EAU009' || code == 'EAU012' ) {
+                                    $('#pwUserId').val( $('#login_id').val() );
+                                    $('#pwLoginDe').val( response_data.loginDe );
+                                    $('#pwFailCnt').val( response_data.failCnt );
+                                    $('#pwData').val( response_data.data );
+    
+                                    $('form[name=PwdFailForm]').attr('action', '/sso/usr/snu/login/pwFailView').submit();
+    
+                            } else {
+    
+                                    if(language == 'eng' ){
+                                            alert( 'You entered an incorrect ID or password. Be aware, if you enter incorrect information ten times, your account will be locked.' );
+                                    } else {
+                                            alert( message );
+                                    }
+    
+    
+                                    $('#login_id').val('');
+                                    $('#login_pwd').val('');
+    
+                                    $('#login_id').focus();
+                            }
+    
+    
+                    }
+    
+            }
+    
+            //QR 로그인시 QR코드 생성
+            function qrcodeCreate(qrMessage) {
+                    var encode_qr_msg = base64urlsafe_encode(qrMessage);
+    
+                    qrMessage = 'passnismartloginapp://slnapp/qrlogin?data=' + encode_qr_msg;
+    
+                    var options = {ecclevel: 'H', modulesize : '3', margin : '0'};
+                    var table = QRCode.generateHTML(qrMessage, options);
+                    $('#qrcode_image').empty().append(table);
+            }
+    
+    
+            //등록 페이지 이동
+            function linkRegist(crtfc_type) {
+    
+                    if( language == 'eng' ) {
+                            $('#lang').val('en');
+                    } else {
+                            $('#lang').val('ko');
+                    }
+    
+                    var osTypeWin = navigator.userAgent.includes('Windows');
+    
+                    if ( crtfc_type == 'fido2' && osTypeWin == true ) {
+                            alert(CommonLang.getMessage('fido2.register.guide'));
+                    }
+    
+                    $('#crtfc_type').val(crtfc_type);
+                    $('#registForm').submit();
+            }
+    
+            // 사용자 인증(모바일)
+            function fnUserAuthPush() {
+    
+                    $.ajax({
+                            url: '/sso/usr/snu/mfa/login/push/ajaxUserAuthPush',
+                            type: 'post',
+                            data: {login_key:$('#login_key').val()},
+                            dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+                                    if(response_data.result) {
+    
+                                            //아이디 저장 여부에 따라 Cookie 설정
+                                            if( $("#push_id_keep").is(":checked") ){
+                                                    setCookie('snuLogin.idKeep', $('#push_login_id').val(), '30');
+                                            } else {
+                                                    deleteCookie('snuLogin.idKeep');
+                                            }
+    
+                                            //카운트 다운 정지
+                                            Countdown.stop('push_countdown', 'N');
+    
+                                            //모바일 인증 레이어 fade out
+                                            $('#popup2').fadeOut();
+                                    $('.bg_overlay').fadeOut();
+    
+                                    //인증 자동 체크 interval 초기화
+                                    clearInterval(_interval);
+    
+                                            //마지막 로그인 타입 지정
+                                    setCookie('smlt', 'push', '30');
+    
+                                    //모바일 인증 완료 후 블랙리스트 및 휴면 계정이 아닐 경우 로그인
+                                    if( response_data.code == 'SS0001' || response_data.code == 'SS0004' ) {
+                                                    $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                            } else if( response_data.code == 'SS0034' ) {
+                                                    $('#blUserId').val( $('#login_id').val() );
+                                                    $('#blLoginDe').val( response_data.loginDe );
+    
+                                                    $('form[name=BlackListForm]').attr('action', '/sso/usr/snu/login/blackListView').submit();
+    
+                                            } else if ( response_data.code == 'SS0006') {// 휴면계정
+                                                    $('#saUserId').val( $('#login_id').val() );
+                                                    $('form[name=SleeperAccntForm]').attr('action', '/sso/usr/self/sleeperAccnt').submit();
+    
+                                            }
+    
+                                    } else {
+                                            if(response_data.code == 'EMF002') {
+                                                    alert(CommonLang.getMessage('error.push.EMF002'));
+    
+                                            } else if(response_data.code == 'EMF005') {
+                                                    alert(CommonLang.getMessage('error.EMF005'));
+    
+                                            } else if(response_data.code == 'EMF006') {
+                                                    alert(CommonLang.getMessage('error.EMF006'));
+    
+                                            } else if(response_data.code == 'EMF007') {
+                                                    alert(CommonLang.getMessage('error.EMF007'));
+    
+                                            } else if(response_data.code == 'EMF026') {
+                                                    alert(CommonLang.getMessage('error.push.EMF026'));
+    
+                                            } else if(response_data.code == 'EMF027') {
+                                                    alert(CommonLang.getMessage('time.expired.msg'));
+    
+                                            } else if(response_data.code == 'EMF025') {
+                                                    //아직 인증이 완료되지 않은 상태, 자동 체크 하고 있기 때문에 일단 알림  없이 무시
+    
+                                            } else if (response_data.code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.code));
+                                            }
+    
+                                            //인증 대기가 아닌 에러 발생 시 PUSH 카운트 다운 정지, 모바일 레이어 fadeOut, interval clear
+                                            if ( response_data.code != 'EMF025' ) {
+                                                    Countdown.stop('push_countdown', 'N');
+    
+                                                    $('#popup2').fadeOut();
+                                            $('.bg_overlay').fadeOut();
+    
+                                            clearInterval(_interval);
+                                            }
+    
+                                    }
+                            },
+                            error:function(xhr, status, error){
+                                    console.log('error:'+error);
+    
+                                    Countdown.stop('push_countdown', 'N');
+                            }
+                    });
+    
+            }
+    
+            // 사용자 인증(QR)
+            function fnUserAuthQR() {
+    
+                    $.ajax({
+                            url: '/sso/usr/snu/mfa/login/push/ajaxUserAuthQR',
+                            type: 'post',
+                            data: {login_key:$('#login_key').val()},
+                            dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+                                    if(response_data.result) {
+    
+                                            //카운트 다운 정지
+                                            Countdown.stop('qr_countdown', 'N');
+    
+                                            //레이어 fade out
+                                            $('#popup1').fadeOut();
+                                    $('.bg_overlay').fadeOut();
+    
+                                    //자동 체크 interval clear
+                                    clearInterval(_interval);
+    
+                                    //마지막 로그인 타입 지정
+                                    setCookie('smlt', 'push', '30');
+    
+                                    //모바일 인증 완료 후 블랙리스트 및 휴면 계정이 아닐 경우 로그인
+                                    if( response_data.code == 'SS0001' || response_data.code == 'SS0004' ) {
+                                                    $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                            } else if( response_data.code == 'SS0034' ) {
+                                                    $('#blUserId').val( $('#login_id').val() );
+                                                    $('#blLoginDe').val( response_data.loginDe );
+    
+                                                    $('form[name=BlackListForm]').attr('action', '/sso/usr/snu/login/blackListView').submit();
+    
+                                            } else if ( response_data.code == 'SS0006') {// 휴면계정
+                                                    $('#saUserId').val( $('#login_id').val() );
+                                                    $('form[name=SleeperAccntForm]').attr('action', '/sso/usr/self/sleeperAccnt').submit();
+    
+                                            }
+    
+                                    } else {
+    
+                                            if(response_data.code == 'EMF002') {
+                                                    alert(CommonLang.getMessage('error.push.EMF002'));
+    
+                                            } else if(response_data.code == 'EMF005') {
+                                                    alert(CommonLang.getMessage('error.EMF005'));
+    
+                                            } else if(response_data.code == 'EMF006') {
+                                                    alert(CommonLang.getMessage('error.EMF006'));
+    
+                                            } else if(response_data.code == 'EMF007') {
+                                                    alert(CommonLang.getMessage('error.EMF007'));
+    
+                                            } else if(response_data.code == 'EMF026') {
+                                                    alert(CommonLang.getMessage('error.push.EMF026'));
+    
+                                            } else if(response_data.code == 'EMF027') {
+                                                    alert(CommonLang.getMessage('time.expired.msg'));
+    
+                                            } else if(response_data.code == 'EMF025') {
+                                                    //아직 인증이 완료되지 않은 상태, 자동 체크 하고 있기 때문에 일단 알림  없이 무시
+    
+                                            } else if (response_data.code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.code));
+                                            }
+    
+                                            //인증 대기가 아닌 에러 발생 시 QR 카운트 다운 정지, QR 레이어 fadeOut, interval clear
+                                            if ( response_data.code != 'EMF025' ) {
+                                                    Countdown.stop('qr_countdown', 'N');
+    
+                                                    $('#popup1').fadeOut();
+                                            $('.bg_overlay').fadeOut();
+    
+                                            clearInterval(_interval);
+    
+                                            _countdownFlag = false;
+                                            }
+    
+                                    }
+                            },
+                            error:function(xhr, status, error){
+                                    console.log('error:'+error);
+    
+                                    Countdown.stop('qr_countdown', 'N');
+                            }
+                    });
+    
+            }
+    
+            // 사용자 인증(패스키)
+            function fnUserAuthFido2() {
+    
+                    $.ajax({
+                            url: '/sso/usr/snu/mfa/login/fido2/ajaxUserAuthFido2',
+                            type: 'post',
+                            data: {login_key:$('#login_key').val()},
+                            dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+                                    if(response_data.result) {
+    
+                                            //아이디 저장 여부에 따라 Cookie 설정
+                                            if( $("#fido2_id_keep").is(":checked") ){
+                                                    setCookie('snuLogin.idKeep', $('#fido2_login_id').val(), '30');
+                                            } else {
+                                                    deleteCookie('snuLogin.idKeep');
+                                            }
+    
+                                            //마지막 로그인 타입 지정
+                                    setCookie('smlt', 'fido2', '30');
+    
+                                    //모바일 인증 완료 후 블랙리스트 및 휴면 계정이 아닐 경우 로그인
+                                    if( response_data.code == 'SS0001' || response_data.code == 'SS0004' ) {
+                                                    $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                            } else if( response_data.code == 'SS0034' ) {
+                                                    $('#blUserId').val( $('#login_id').val() );
+                                                    $('#blLoginDe').val( response_data.loginDe );
+    
+                                                    $('form[name=BlackListForm]').attr('action', '/sso/usr/snu/login/blackListView').submit();
+    
+                                            } else if ( response_data.code == 'SS0006') {// 휴면계정
+                                                    $('#saUserId').val( $('#login_id').val() );
+                                                    $('form[name=SleeperAccntForm]').attr('action', '/sso/usr/self/sleeperAccnt').submit();
+    
+                                            }
+    
+                                    } else {
+    
+                                            if(response_data.code == 'EMF002') {
+                                                    alert(CommonLang.getMessage('error.fido2.EMF002'));
+    
+                                            } else if(response_data.code == 'EMF005') {
+                                                    alert(CommonLang.getMessage('error.EMF005'));
+    
+                                            } else if(response_data.code == 'EMF006') {
+                                                    alert(CommonLang.getMessage('error.EMF006'));
+    
+                                            } else if(response_data.code == 'EMF007') {
+                                                    alert(CommonLang.getMessage('error.EMF007'));
+    
+                                            } else if(response_data.code == 'EMF026') {
+                                                    alert(CommonLang.getMessage('error.fido2.EMF026'));
+    
+                                            } else if(response_data.code == 'EMF027') {
+                                                    alert(CommonLang.getMessage('time.expired.msg'));
+    
+                                            } else if(response_data.code == 'EMF025') {
+                                                    //아직 인증이 완료되지 않은 상태, 자동 체크 하고 있기 때문에 일단 알림  없이 무시
+    
+                                            } else if (response_data.code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.code));
+                                            } else if (response_data.code == 'EAU029') {
+                                                    alert(CommonLang.getMessage('error.EAU029', response_data.code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.code));
+                                            }
+                                    }
+                            },
+                            error:function(xhr, status, error){
+                                    console.log('error:'+error);
+    
+                            }
+                    });
+    
+            }
+    
+            function fnUserAuthId() {
+    
+                    var crtfc_no = $('#id_crtfc_no').val();
+    
+                    if ( authNosendChk == false ) {
+                            alert(CommonLang.getMessage('no.send.crtfc_no'));
+                            return;
+                    }
+    
+                    if(crtfc_no == '') {
+                            alert(CommonLang.getMessage('input.crtfc_no.empty.msg'));
+                            $('#id_crtfc_no').focus();
+                            return;
+                    }
+    
+                    //이 브라우저에서 추가 인증 사용 안함 체크
+                    var bypass_check = $('#bypass_check').is(':checked');
+    
+                    $.ajax({
+                            url: '/sso/usr/snu/mfa/login/ajaxUserAuthId',
+                            type: 'post',
+                            data: {crtfc_no:crtfc_no,login_key:$('#login_key').val(),bypass_check:bypass_check},
+                            dataType: 'json',
+                    async: false,
+                    success: function (response_data)
+                    {
+                                    if(response_data.result) {
+    
+                                            //카운트 다운 정지
+                                            Countdown.stop('id_countdown', 'N');
+    
+                                            //레이어 fade out
+                                            $('#popup3').fadeOut();
+                                    $('.bg_overlay').fadeOut();
+    
+                                    //마지막 로그인 타입 지정
+                                    setCookie('smlt', 'id', '30');
+    
+                                    var message = loginModule.message(response_data);
+    
+                                    //추가 인증 완료 후 loginProc에서 저장해 둔 code 및 message에 따라 처리
+                                    if( response_data.code == 'SS0001' || response_data.code == 'SS0004' ) {
+                                                    $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                            } else if( response_data.code == 'SS0009' ) {
+    
+                                                    if( confirm( message ) ) {
+                                                            $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                                    } else {
+    
+                                                            Countdown.stop('id_countdown', 'N');
+    
+                                                            $('#popup3').fadeOut();
+                                                    $('.bg_overlay').fadeOut();
+    
+                                                    $('#info_null').hide();
+    
+                                                            $('#login_id').focus();
+                                                    }
+    
+                                            } else if( response_data.code == 'SS0005' || response_data.code == 'SS0008' ) {
+                                                    alert( message );
+                                                    $('#pwd_type').val( response_data.code );
+                                                    $('form[name=loginForm]').attr('action', '/sso/usr/snu/login/password/view').submit();
+    
+                                            } else if( response_data.code == 'SS0034' ) {
+                                                    $('#blUserId').val( $('#login_id').val() );
+                                                    $('#blLoginDe').val( response_data.loginDe );
+    
+                                                    $('form[name=BlackListForm]').attr('action', '/sso/usr/snu/login/blackListView').submit();
+    
+                                            } else if ( response_data.code == 'SS0006') {// 휴면계정
+                                                    $('#saUserId').val( $('#login_id').val() );
+                                                    $('form[name=SleeperAccntForm]').attr('action', '/sso/usr/self/sleeperAccnt').submit();
+    
+                                            }
+    
+                                    } else {
+    
+                                            if ( response_data.code == 'EMF002' ) {
+                                                    alert(CommonLang.getMessage('input.crtfc_no.incorrect.msg'));
+    
+                                                    $('#id_crtfc_no').val('');
+                                                    $('#id_crtfc_no').focus();
+    
+                                            } else if(response_data.code == 'EMF005') {
+                                                    alert(CommonLang.getMessage('error.EMF005'));
+    
+                                            } else if(response_data.code == 'EMF006') {
+                                                    alert(CommonLang.getMessage('error.EMF006'));
+    
+                                            } else if(response_data.code == 'EMF007') {
+                                                    alert(CommonLang.getMessage('error.EMF007'));
+    
+                                            } else if(response_data.code == 'EMF027') {
+                                                    alert(CommonLang.getMessage('time.expired.msg'));
+    
+                                            } else if (response_data.code == 'EAU006') {
+                                                    alert(CommonLang.getMessage('error.request', response_data.code));
+                                            } else {
+                                                    alert(CommonLang.getMessage('error.system', response_data.code));
+                                            }
+    
+    
+                                            if ( response_data.code != 'EMF002' ) {
+                                                    $('#id_crtfc_no').val('');
+    
+                                                    _countdownFlag = false;
+                                                    Countdown.stop('id_countdown', 'N');
+    
+                                                    $('#popup3').fadeOut();
+                                            $('.bg_overlay').fadeOut();
+    
+                                            $('#info_null').hide();
+                                            }
+                                    }
+                            },
+                            error:function(xhr, status, error){
+                                    console.log('error:'+error);
+                            }
+                    });
+    
+            }
+    
+    
+            function fido2LoginProc(response_data) {
+    
+                    if(response_data != null) {
+    
+                            var result = response_data.result;
+    
+                            if(result) {
+                                    fnUserAuthFido2();
+    
+                            } else {
+                                    alert(CommonLang.getMessage('error.fido2.500'));
+                            }
+                    }
+            }
+    
+            //인증코드 발송
+            function authNoSend() {
+    
+                    var auth_methods = $('#auth_methods').val();
+    
+                    var mail = $('#mail').val();
+                    var sms = $('#sms').val();
+    
+                    if ( auth_methods == 'sms' ) {
+                            if ( sms !='' ) {
+                                    authNosendChk = true;
+                            } else {
+                                    alert(CommonLang.getMessage('no.sms.number'));
+                            }
+                    } else if ( auth_methods == 'mail' ) {
+                            if ( mail !='' ) {
+                                    authNosendChk = true;
+                            } else {
+                                    alert(CommonLang.getMessage('no.email.address'));
+                            }
+                    }
+    
+                    if ( authNosendChk == true ) {
+    
+                            $.ajax({
+                                    url: '/sso/usr/snu/mfa/login/ajaxUserSend',
+                                    type: 'post',
+                                    data: {crtfc_type:auth_methods,login_key:$('#login_key').val()},
+                                    dataType: 'json',
+                            async: false,
+                            success: function (response_data)
+                            {
+                                            if(response_data.result) {
+    
+                                                    alert(CommonLang.getMessage('send.crtfc_no.msg'));
+    
+                                                    $('#id_crtfc_no').focus();
+    
+                                                    if (_countdownFlag) {
+                                                    Countdown.init();
+    
+                                            } else {
+                                                    _countdownFlag = true;
+    
+                                                    Countdown.start(3, function() {
+                                                            alert(CommonLang.getMessage('time.expired.msg'));
+    
+                                                            $('#id_crtfc_no').val('');
+    
+                                                            _countdownFlag = false;
+                                                            Countdown.stop('id_countdown', 'N');
+    
+                                                            $('#popup3').fadeOut();
+                                                    $('.bg_overlay').fadeOut();
+    
+                                                    $('#info_null').hide();
+    
+                                                            }, 'id_countdown', 'N');
+                                            }
+    
+                                            } else {
+                                                    alert(CommonLang.getMessage('send.error', response_data.error_code));
+                                            }
+                                    },
+                                    error:function(xhr, status, error){
+                                            console.log('error:'+error);
+                                    }
+                            });
+                    }
+            }
+    
+            function authMethodsChange(auth_methods) {
+    
+                    if (_countdownFlag) {
+                            Countdown.stop('id_countdown', 'N');
+                            _countdownFlag = false;
+                    }
+    
+                    authNosendChk = false;
+    
+                    $('#auth_methods').val(auth_methods);
+                    $('#auth_methods_info').val($('#'+auth_methods).val());
+                    $('#id_crtfc_no').val('');
+    
+            }
+    
+            function SignDataWithVID_callback(aResult) {
+    
+                    document.getElementById ("form_SignDataWithVID").aSignedMsg.value = aResult;
+    
+                    //이 부분에서 form.submit() 처리
+                    var response_data = loginModule.certAuth(mfaCertAuthUrl);
+    
+                    if( response_data != null ) {
+                            var code = response_data.code;
+                            var rtnMsg = response_data.rtnMsg;
+                            var certErrCode = response_data.certErrCode;
+                            var message = loginModule.message(response_data);
+    
+                            // SS0004 최초로그인 해당 없음
+                            if( code == 'SS0001' || code == 'SS0004' || code == 'SS0005' || code == 'SS0008' ) {
+    
+                                    //마지막 로그인 타입 지정
+                            setCookie('smlt', 'cert', '30');
+    
+                                    $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                            } else if( code == 'SS0009' ) {
+    
+                                    if( confirm( message ) ) {
+    
+                                            //마지막 로그인 타입 지정
+                                    setCookie('smlt', 'cert', '30');
+    
+                                            $('form[name=loginForm]').attr('action', sesUrl).submit();
+    
+                                    } else {
+                                            $('#login_id').focus();
+                                    }
+    
+                            // 블랙리스트 차단
+                            } else if( code == 'SS0034' ) {
+                                    $('#blUserId').val( $('#login_id').val() );
+                                    $('#blLoginDe').val( response_data.loginDe );
+    
+                                    $('form[name=BlackListForm]').attr('action', '/sso/usr/snu/login/blackListView').submit();
+    
+                            // 휴면계정
+                            } else if ( response_data.code == 'SS0006') {
+                                    $('#saUserId').val( $('#login_id').val() );
+                                    $('form[name=SleeperAccntForm]').attr('action', '/sso/usr/self/sleeperAccnt').submit();
+    
+                            } else if( code == 'EAU006' || code == 'EAU007' || code == 'EAU013' ) {
+                                    alert( message );
+                                    location.href = 'https://my.snu.ac.kr/passni/sample/loginProc.jsp';
+    
+                            } else {
+    
+                                    if( rtnMsg != '' ){
+                                            alert( message + "\n\n" + rtnMsg + '[' + certErrCode + ']' );
+                                    } else {
+                                            alert( message );
+                                    }
+    
+                            }
+    
+                    }
+            }
+    
+            //레이어 내 X 버튼 클릭 시 카운트 다운 정지 및 레이어 fadeOut
+            function popupClose(type) {
+    
+                    $('.layer_popup').fadeOut();
+                    $('.bg_overlay').fadeOut();
+    
+                    clearInterval(_interval);
+    
+                    if ( type == 'qr' ) {
+                            Countdown.stop('qr_countdown', 'N');
+                            _countdownFlag = false;
+    
+                            $('#popup1').off('keydown'); // 포커스 트랩 해제
+    
+                            $('#btnQRTokenCreate').focus();
+    
+                    } else if ( type == 'push' ) {
+                            Countdown.stop('push_countdown', 'N');
+    
+                            $('#popup2').off('keydown'); // 포커스 트랩 해제
+    
+                            $('#btnIDTokenCreateApp').focus();
+    
+                    } else if ( type == 'id' ) {
+    
+                            Countdown.stop('id_countdown', 'N');
+                            _countdownFlag = false;
+    
+                            $('#loginProcBtn').focus();
+    
+                            authMethodsChange('mail');
+    
+                            $('#radio-box01').prop('checked', true);
+    
+                            $('#info_null').hide();
+    
+                            $('#popup3').off('keydown'); // 포커스 트랩 해제
+                    }
+    
+            }
+    
+            // 팝업 내에서만 포커스를 순환하도록 하는 함수
+            function trapFocus(selector, startSelector, endSelector) {
+                var startElement = $(selector).find(startSelector);
+                var endElement = $(selector).find(endSelector);
+    
+                $(selector).on('keydown', function (e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) { // Shift + Tab
+                            if ($(document.activeElement).is(startElement)) {
+                                e.preventDefault();
+                                endElement.focus();
+                            }
+                        } else { // Tab
+                            if ($(document.activeElement).is(endElement)) {
+                                e.preventDefault();
+                                startElement.focus();
+                            }
+                        }
+                    }
+                });
+            }
+    
+            //공지사항 팝업 관련
+            function shouldShowPopup() {
+    
+                const now = new Date().getTime();
+                const fromDate ='1739581200000';
+                const endDate = '1739588400000';
+    
+                if ( now >= fromDate && now <= endDate ) {
+                    return true;
+                }
+                return false;
+            }
+    
+            function openNoticePopup(lang) {
+                    var langNotice = lang;
+                if (shouldShowPopup()) {
+                    if( lang == 'eng' ){
+                            window.open("http://nsso.snu.ac.kr/sso/common/enNotice.jsp", "popupWindow", "width=600,height=580,left=100,top=100");
+                    } else {
+                            window.open("http://nsso.snu.ac.kr/sso/common/koNotice.jsp", "popupWindow", "width=600,height=580,left=100,top=100");
+                    }
+    
+                }
+            }
+    
+    
+    </script>
+    
+    
+    
+    
+    </body></html>

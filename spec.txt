@@ -38,3 +38,79 @@
     - size : ef-size-col
     - created : ef-date-created-col > span > span
     - modified : ef-date-modified-col > span > span
+
+Needed Token: pni token & session
+
+1. GET https://nsso.snu.ac.kr/sso/usr/snu/mfa/login/view => WMONID, PJSESSION 생성 / agent 정보 제공(html)
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+
+    <script type="text/javascript">
+
+function fSSOInitialize() {
+	document.frmSSO.submit();
+}
+
+</script>
+
+  </head>
+  <body onload="fSSOInitialize();">
+
+    <form id="frmSSO" name="frmSSO" method="post"
+      action="https://nsso.snu.ac.kr/sso/usr/login/link">
+
+      <input type="hidden" id="agt_url" name="agt_url"
+        value="https://my.snu.ac.kr" />
+
+      <input type="hidden" id="agt_r" name="agt_r" value="F49A20772CA97926" />
+
+      <input type="hidden" id="agt_id" name="agt_id" value="snu-new-portal" />
+
+    </form>
+
+  </body>
+</html>
+2. GET https://my.snu.ac.kr/SSOService.do => JSESSION 생성
+3. POST https://nsso.snu.ac.kr/sso/usr/login/link + form => View 생성
+
+
+- 대시보드 불러오기 : GET https://myetl.snu.ac.kr/api/v1/dashboard/dashboard_cards
+- 과목 요약 : GET https://myetl.snu.ac.kr/api/v1/courses/{course_id}/activity_stream/summary
+- 알림 : GET https://myetl.snu.ac.kr/api/v1/conversations/unread_count
+- 모든 과목 : GET https://myetl.snu.ac.kr/courses (HTML)
+- 과제 즐겨찾기 : POST https://myetl.snu.ac.kr/api/v1/users/self/favorites/courses/236208
+  - body : {
+    _method : POST, DELETE
+    authencity_token : $(cruf_token)
+  }
+- 특정 과목의 공지 : GET https://myetl.snu.ac.kr/api/v1/announcements
+                          -context_codes[]={course_id}
+                          -per_page={ammount}
+                          -page={page}
+                          -start_date=1900-01-01
+                          -end_date=2025-03-08T09:10:34.912Z
+                          -active_only=true
+                          -include[]=sections
+                          -include[]=sections_user_count
+- 모듈 보기 : GET https://myetl.snu.ac.kr/courses/{course_id}/modules
+- 과제 그룹 : GET https://myetl.snu.ac.kr/api/v1/courses/248400/assignment_groups
+                -exclude_response_fields[]=description
+                -exclude_response_fields[]=rubric
+                -include[]=assignments
+                -include[]=discussion_topic
+                -override_assignment_dates=true
+                -per_page=50
+
+- 세부 과제 : GET https://myetl.snu.ac.kr/api/v1/courses/248400/students/submissions?per_page=50
+- 파일 목록 : GET https://myetl.snu.ac.kr/api/v1/folders/415145/files?include%5B%5D=user&include%5B%5D=usage_rights&include%5B%5D=enhanced_preview_url&include%5B%5D=context_asset_string&per_page=20&sort=&order=
+- 폴더 목록 : GET https://myetl.snu.ac.kr/api/v1/folders/415145/folders
+- 세부 파일 : GET https://myetl.snu.ac.kr/api/v1/files/3463135
+- 사용자 : GET https://myetl.snu.ac.kr/courses/276874/users (html)
+- 과제 제출 : POST https://myetl.snu.ac.kr/courses/239250/assignments/194713/submissions
