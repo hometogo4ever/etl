@@ -107,6 +107,118 @@ var ETLApiInstance = /** @class */ (function () {
             });
         });
     };
+    ETLApiInstance.prototype.getCourses = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.csrf_token) {
+                            throw new Error("CSUF token is not initialized");
+                        }
+                        return [4 /*yield*/, this.axiosInstance.get("/api/v1/dashboard/dashboard_cards")];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.data];
+                }
+            });
+        });
+    };
+    ETLApiInstance.prototype.getAlarms = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.csrf_token) {
+                            throw new Error("CSUF token is not initialized");
+                        }
+                        return [4 /*yield*/, this.axiosInstance.get("/api/v1/planner/items")];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.data];
+                }
+            });
+        });
+    };
+    ETLApiInstance.prototype.getNotifications = function (course_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.csrf_token) {
+                            throw new Error("CSUF token is not initialized");
+                        }
+                        return [4 /*yield*/, this.axiosInstance.get("/api/v1/announcements?per_page=10&context_codes[]=course_".concat(course_id, "\n        &page=1\n        &active_only=true\n        &include[]=sections\n        &include[]=sections_user_count"))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.data];
+                }
+            });
+        });
+    };
+    ETLApiInstance.prototype.test = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var courses, e_1, alarms, e_2, courses, _i, courses_1, course, notifications, e_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.getCourses()];
+                    case 1:
+                        courses = _a.sent();
+                        console.log("TEST 1 : SUCCESS");
+                        console.log(courses.map(function (course) { return course.originalName; }));
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_1 = _a.sent();
+                        console.log("TEST 1 : FAILED");
+                        return [2 /*return*/];
+                    case 3:
+                        _a.trys.push([3, 5, , 6]);
+                        return [4 /*yield*/, this.getAlarms()];
+                    case 4:
+                        alarms = _a.sent();
+                        console.log("TEST 2 : SUCCESS");
+                        console.log(alarms.map(function (alarm) { return alarm.context_name; }));
+                        return [3 /*break*/, 6];
+                    case 5:
+                        e_2 = _a.sent();
+                        console.log("TEST 2 : FAILED (", e_2, ")");
+                        return [2 /*return*/];
+                    case 6:
+                        _a.trys.push([6, 12, , 13]);
+                        return [4 /*yield*/, this.getCourses()];
+                    case 7:
+                        courses = _a.sent();
+                        _i = 0, courses_1 = courses;
+                        _a.label = 8;
+                    case 8:
+                        if (!(_i < courses_1.length)) return [3 /*break*/, 11];
+                        course = courses_1[_i];
+                        return [4 /*yield*/, this.getNotifications(course.id)];
+                    case 9:
+                        notifications = _a.sent();
+                        console.log(notifications.map(function (notification) { return notification.title; }));
+                        _a.label = 10;
+                    case 10:
+                        _i++;
+                        return [3 /*break*/, 8];
+                    case 11:
+                        console.log("TEST 3 : SUCCESS");
+                        return [3 /*break*/, 13];
+                    case 12:
+                        e_3 = _a.sent();
+                        console.log("TEST 3 : FAILED (", e_3, ")");
+                        return [2 /*return*/];
+                    case 13:
+                        console.log("ALL TESTS PASSED");
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     ETLApiInstance.getInstance = function () {
         if (!ETLApiInstance.instance) {
             ETLApiInstance.instance = new ETLApiInstance();
@@ -118,9 +230,8 @@ var ETLApiInstance = /** @class */ (function () {
 var instance = ETLApiInstance.getInstance();
 instance.initialize().then(function () {
     instance
-        .login("2023-15725", "Qk9xDFdX00WkHmALArnOXRDhNmJAt6Se")
+        .login("2023-15725", "MlVPM6B6fJtjL0WSdtNs3JEgRU5uH6Xj")
         .then(function (response) {
-        console.log(response);
-        console.log(instance.getToken());
+        instance.test();
     });
 });

@@ -84,19 +84,57 @@ class ETLApiInstance {
       throw new Error("CSUF token is not initialized");
     }
     const response: AxiosResponse<PlannableNotification[]> =
-      await this.axiosInstance.get("/api/v1/alarms");
+      await this.axiosInstance.get("/api/v1/planner/items");
     return response.data;
   }
 
-  public async getNotifications(course_id: number): Promise<Notification[]> {
+  public async getNotifications(course_id: string): Promise<Notification[]> {
     if (!this.csrf_token) {
       throw new Error("CSUF token is not initialized");
     }
     const response: AxiosResponse<Notification[]> =
       await this.axiosInstance.get(
-        `/api/v1/courses/${course_id}/announcements?per_page=10`
+        `/api/v1/announcements?per_page=10&context_codes[]=course_${course_id}
+        &page=1
+        &active_only=true
+        &include[]=sections
+        &include[]=sections_user_count`
       );
     return response.data;
+  }
+
+  public async test() {
+    try {
+      const courses = await this.getCourses();
+      console.log("TEST 1 : SUCCESS");
+      console.log(courses.map((course) => course.originalName));
+    } catch (e) {
+      console.log("TEST 1 : FAILED");
+      return;
+    }
+
+    try {
+      const alarms = await this.getAlarms();
+      console.log("TEST 2 : SUCCESS");
+      console.log(alarms.map((alarm) => alarm.context_name));
+    } catch (e) {
+      console.log("TEST 2 : FAILED (", e, ")");
+      return;
+    }
+
+    try {
+      const courses = await this.getCourses();
+      for (const course of courses) {
+        const notifications = await this.getNotifications(course.id);
+        console.log(notifications.map((notification) => notification.title));
+      }
+      console.log("TEST 3 : SUCCESS");
+    } catch (e) {
+      console.log("TEST 3 : FAILED (", e, ")");
+      return;
+    }
+
+    console.log("ALL TESTS PASSED");
   }
 
   static getInstance() {
@@ -110,9 +148,8 @@ class ETLApiInstance {
 const instance = ETLApiInstance.getInstance();
 instance.initialize().then(() => {
   instance
-    .login("2023-15725", "Qk9xDFdX00WkHmALArnOXRDhNmJAt6Se")
+    .login("2023-15725", "MlVPM6B6fJtjL0WSdtNs3JEgRU5uH6Xj")
     .then((response) => {
-      console.log(response);
-      console.log(instance.getToken());
+      instance.test();
     });
 });
