@@ -1,12 +1,14 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar, Cookie } from "tough-cookie";
 import { Course } from "./types/Courses";
 import { Notification, PlannableNotification } from "./types/Notification";
+import MyDatabase from "./db";
 
 class ETLApiInstance {
   private static instance: ETLApiInstance;
-  private axiosInstance: any;
+  private axiosInstance: AxiosInstance;
+  private db: MyDatabase;
   private jar: CookieJar;
 
   private csrf_token: string;
@@ -17,6 +19,8 @@ class ETLApiInstance {
 
   private constructor() {
     this.jar = new CookieJar();
+    this.db = new MyDatabase();
+
     this.csrf_token = "";
     this.axiosInstance = wrapper(
       axios.create({
@@ -134,6 +138,23 @@ class ETLApiInstance {
       return;
     }
 
+    try {
+      // DB Test
+      const courses = await this.getCourses();
+
+      for (const course of courses) {
+        this.db.insertCourse(course);
+        const notifications = await this.getNotifications(course.id);
+        for (const notification of notifications) {
+          this.db.insertNotification(notification);
+        }
+      }
+      console.log("TEST 4 : SUCCESS");
+    } catch (e) {
+      console.log("TEST 4 : FAILED (", e, ")");
+      return;
+    }
+
     console.log("ALL TESTS PASSED");
   }
 
@@ -148,7 +169,7 @@ class ETLApiInstance {
 const instance = ETLApiInstance.getInstance();
 instance.initialize().then(() => {
   instance
-    .login("2023-15725", "MlVPM6B6fJtjL0WSdtNs3JEgRU5uH6Xj")
+    .login("2023-15725", "bcx8nAPlCN1ctnXAgKk5yc4PcvNvREjN")
     .then((response) => {
       instance.test();
     });
