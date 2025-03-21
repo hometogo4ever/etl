@@ -1,9 +1,14 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar, Cookie } from "tough-cookie";
-import { Course } from "./types/Courses";
-import { Notification, PlannableNotification } from "./types/Notification";
+import { Course } from "../types/Courses";
+import { Notification, PlannableNotification } from "../types/Notification";
 import MyDatabase from "./db";
+import * as cheerio from "cheerio";
+import { Module } from "module";
+import { StudentModule } from "../types/Module";
+import { ModuleGroup } from "../types/ModuleGroup";
+import { AssignmentGroup } from "../types/AssignmentGroup";
 
 class ETLApiInstance {
   private static instance: ETLApiInstance;
@@ -107,55 +112,39 @@ class ETLApiInstance {
     return response.data;
   }
 
-  public async test() {
-    try {
-      const courses = await this.getCourses();
-      console.log("TEST 1 : SUCCESS");
-      console.log(courses.map((course) => course.originalName));
-    } catch (e) {
-      console.log("TEST 1 : FAILED");
-      return;
+  public async getCourseModules(course_id: string): Promise<ModuleGroup[]> {
+    if (!this.csrf_token) {
+      throw new Error("CSUF token is not initialized");
     }
+    const response: AxiosResponse<ModuleGroup[]> = await this.axiosInstance.get(
+      `/api/v1/courses/${course_id}/modules`
+    );
+    return response.data;
+  }
 
-    try {
-      const alarms = await this.getAlarms();
-      console.log("TEST 2 : SUCCESS");
-      console.log(alarms.map((alarm) => alarm.context_name));
-    } catch (e) {
-      console.log("TEST 2 : FAILED (", e, ")");
-      return;
+  public async getModuleItems(
+    course_id: string,
+    module_id: string
+  ): Promise<StudentModule[]> {
+    if (!this.csrf_token) {
+      throw new Error("CSUF token is not initialized");
     }
+    const response: AxiosResponse<StudentModule[]> =
+      await this.axiosInstance.get(
+        `/api/v1/courses/${course_id}/modules/${module_id}/items`
+      );
+    return response.data;
+  }
 
-    try {
-      const courses = await this.getCourses();
-      for (const course of courses) {
-        const notifications = await this.getNotifications(course.id);
-        console.log(notifications.map((notification) => notification.title));
-      }
-      console.log("TEST 3 : SUCCESS");
-    } catch (e) {
-      console.log("TEST 3 : FAILED (", e, ")");
-      return;
+  public async getAssignments(course_id: string): Promise<AssignmentGroup[]> {
+    if (!this.csrf_token) {
+      throw new Error("CSUF token is not initialized");
     }
-
-    try {
-      // DB Test
-      const courses = await this.getCourses();
-
-      for (const course of courses) {
-        this.db.insertCourse(course);
-        const notifications = await this.getNotifications(course.id);
-        for (const notification of notifications) {
-          this.db.insertNotification(notification);
-        }
-      }
-      console.log("TEST 4 : SUCCESS");
-    } catch (e) {
-      console.log("TEST 4 : FAILED (", e, ")");
-      return;
-    }
-
-    console.log("ALL TESTS PASSED");
+    const response: AxiosResponse<AssignmentGroup[]> =
+      await this.axiosInstance.get(
+        `/api/v1/courses/${course_id}/assignment_groups`
+      );
+    return response.data;
   }
 
   static getInstance() {
@@ -168,9 +157,5 @@ class ETLApiInstance {
 
 const instance = ETLApiInstance.getInstance();
 instance.initialize().then(() => {
-  instance
-    .login("2023-15725", "bcx8nAPlCN1ctnXAgKk5yc4PcvNvREjN")
-    .then((response) => {
-      instance.test();
-    });
+  instance.login("2023-15725", "PU1LNUbuRPPRvcsodIgxzD9XZLx2m4oA");
 });

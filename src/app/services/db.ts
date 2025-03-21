@@ -1,16 +1,20 @@
 // database.ts
 import Database = require("better-sqlite3");
-import { User, UserFull } from "./types/User";
-import { Course } from "./types/Courses";
-import { Grade } from "./types/Grade";
-import { Enrollment } from "./types/Enrollment";
-import { Attachment, Folder } from "./types/Attachment";
+import { User, UserFull } from "../types/User";
+import { Course } from "../types/Courses";
+import { Grade } from "../types/Grade";
+import { Enrollment } from "../types/Enrollment";
+import { Attachment, Folder } from "../types/Attachment";
 import {
   Notification,
   Plannable,
   PlannableNotification,
-} from "./types/Notification";
-import { Submission } from "./types/Submission";
+} from "../types/Notification";
+import { Submission } from "../types/Submission";
+import { Assignment } from "../types/Assignment";
+import { ModuleGroup } from "../types/ModuleGroup";
+import { AssignmentGroup } from "../types/AssignmentGroup";
+import { StudentModule } from "../types/Module";
 
 /**
  * SQLite DB 접근 및 각 엔티티를 INSERT하는 메서드를 제공하는 클래스
@@ -223,6 +227,110 @@ class MyDatabase {
 
         FOREIGN KEY (user_fk) REFERENCES Users(user_pk),
         FOREIGN KEY (submission_fk) REFERENCES Submissions(submission_pk)
+      );
+    `);
+
+    // ---- 새로 추가되는 테이블들 (ModuleGroup, StudentModule, AssignmentGroup, Assignment) ----
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS ModuleGroups (
+        module_group_pk  INTEGER PRIMARY KEY AUTOINCREMENT,
+        completed_at     TEXT,
+        id               TEXT,
+        item_count       INTEGER,
+        item_url         TEXT,
+        name             TEXT,
+        position         INTEGER,
+        prerequisite_module_ids TEXT,  -- JSON array
+        publish_final_grade        INTEGER, -- boolean
+        require_sequential_progress INTEGER, -- boolean
+        state            TEXT,
+        unlock_at        TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS StudentModules (
+        student_module_pk INTEGER PRIMARY KEY AUTOINCREMENT,
+        id          TEXT,
+        title       TEXT,
+        position    INTEGER,
+        intent      INTEGER,
+        type        TEXT,
+        module_id   TEXT,
+        html_url    TEXT,
+        content_id  INTEGER,
+        url         TEXT,
+        external_url TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS AssignmentGroups (
+        assignment_group_pk INTEGER PRIMARY KEY AUTOINCREMENT,
+        id                TEXT,
+        name              TEXT,
+        position          INTEGER,
+        group_weight      REAL,
+        sis_source_id     TEXT,
+        integration_data  TEXT,
+        rules             TEXT,
+        any_assignment_in_closed_grading_period INTEGER
+      );
+
+      CREATE TABLE IF NOT EXISTS Assignments (
+        assignment_pk INTEGER PRIMARY KEY AUTOINCREMENT,
+        id                TEXT,
+        due_at            TEXT,
+        unlock_at         TEXT,
+        lock_at           TEXT,
+        points_possible   REAL,
+        grading_type      TEXT,
+        assignment_group_id TEXT,     -- 외부 시스템/Canvas의 ID (문자열)
+        grading_standard_id TEXT,
+        created_at        TEXT,
+        updated_at        TEXT,
+        peer_reviews                       INTEGER,
+        automatic_peer_reviews             INTEGER,
+        position                           INTEGER,
+        grade_group_students_individually  INTEGER,
+        anonymous_peer_reviews             INTEGER,
+        group_category_id                  TEXT,
+        post_to_sis                        INTEGER,
+        moderated_grading                  INTEGER,
+        omit_from_final_grade              INTEGER,
+        intra_group_peer_reviews           INTEGER,
+        anonymous_instructor_annotations   INTEGER,
+        anonymous_grading                  INTEGER,
+        graders_anonymous_to_graders       INTEGER,
+        grader_count                       INTEGER,
+        grader_comments_visible_to_graders INTEGER,
+        final_grader_id                    TEXT,
+        grader_names_visible_to_final_grader INTEGER,
+        allowed_attempts                   INTEGER,
+        secure_params                      TEXT,
+        course_id                          TEXT,
+        name                               TEXT,
+        submission_types                   TEXT,   -- JSON array
+        has_submitted_submissions          INTEGER,
+        due_date_required                  INTEGER,
+        max_name_length                    INTEGER,
+        is_quiz_assignment                 INTEGER,
+        can_duplicate                      INTEGER,
+        original_course_id                 TEXT,
+        original_assignment_id             TEXT,
+        original_assignment_name           TEXT,
+        original_quiz_id                   TEXT,
+        workflow_state                     TEXT,
+        muted                              INTEGER,
+        html_url                           TEXT,
+        published                          INTEGER,
+        only_visible_to_overrides          INTEGER,
+        locked_for_user                    INTEGER,
+        submissions_download_url           TEXT,
+        post_manually                      INTEGER,
+        anonymize_students                 INTEGER,
+        require_lockdown_browser           INTEGER,
+        in_closed_grading_period           INTEGER,
+
+        -- DB 내부에서 AssignmentGroups 와 1:N 관계
+        assignment_group_fk INTEGER,
+        FOREIGN KEY (assignment_group_fk) REFERENCES AssignmentGroups(assignment_group_pk)
       );
     `);
   }
@@ -737,68 +845,378 @@ class MyDatabase {
     });
     return Number(result.lastInsertRowid);
   }
+  /**
+   * ModuleGroup INSERT
+   */
+  public insertModuleGroup(m: ModuleGroup): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO ModuleGroups (
+        completed_at,
+        id,
+        item_count,
+        item_url,
+        name,
+        position,
+        prerequisite_module_ids,
+        publish_final_grade,
+        require_sequential_progress,
+        state,
+        unlock_at
+      ) VALUES (
+        @completed_at,
+        @id,
+        @item_count,
+        @item_url,
+        @name,
+        @position,
+        @prerequisite_module_ids,
+        @publish_final_grade,
+        @require_sequential_progress,
+        @state,
+        @unlock_at
+      )
+    `);
+    const result = stmt.run({
+      completed_at: m.completed_at,
+      id: m.id,
+      item_count: m.item_count,
+      item_url: m.item_url,
+      name: m.name,
+      position: m.position,
+      prerequisite_module_ids: this.toJson(m.prerequisite_module_ids), // string[]
+      publish_final_grade: this.boolToInt(m.publish_final_grade),
+      require_sequential_progress: this.boolToInt(
+        m.require_sequential_progress
+      ),
+      state: m.state,
+      unlock_at: m.unlock_at,
+    });
+    return Number(result.lastInsertRowid);
+  }
 
   /**
-   * 예시로 간단하게 DB에 Insert를 시도해보는 함수
+   * StudentModule INSERT
    */
-  public exampleUsage(): void {
-    // 1) User 삽입
-    const user = new User(101, "Alice", "http://avatar", "http://profile");
-    const userPk = this.insertUser(user);
-    console.log("Inserted User PK:", userPk);
+  public insertStudentModule(s: StudentModule): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO StudentModules (
+        id,
+        title,
+        position,
+        intent,
+        type,
+        module_id,
+        html_url,
+        content_id,
+        url,
+        external_url
+      ) VALUES (
+        @id,
+        @title,
+        @position,
+        @intent,
+        @type,
+        @module_id,
+        @html_url,
+        @content_id,
+        @url,
+        @external_url
+      )
+    `);
+    const result = stmt.run({
+      id: s.id,
+      title: s.title,
+      position: s.position,
+      intent: s.intent,
+      type: s.type,
+      module_id: s.module_id,
+      html_url: s.html_url,
+      content_id: s.content_id,
+      url: s.url,
+      external_url: s.external_url,
+    });
+    return Number(result.lastInsertRowid);
+  }
 
-    // 2) Course 삽입
-    const course = new Course(
-      "OriginalName",
-      "CODE101",
-      "assetX",
-      "/course/101",
-      "Spring",
-      "course_101",
-      true
-    );
-    const coursePk = this.insertCourse(course);
-    console.log("Inserted Course PK:", coursePk);
+  /**
+   * AssignmentGroup INSERT
+   * -> 내부에 assignments: Assignment[] 가 있으므로, 1:N 관계를 맺어둔
+   *    Assignments 테이블에 각각 insertAssignment()를 호출할 수 있습니다.
+   */
+  public insertAssignmentGroup(ag: AssignmentGroup): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO AssignmentGroups (
+        id,
+        name,
+        position,
+        group_weight,
+        sis_source_id,
+        integration_data,
+        rules,
+        any_assignment_in_closed_grading_period
+      ) VALUES (
+        @id,
+        @name,
+        @position,
+        @group_weight,
+        @sis_source_id,
+        @integration_data,
+        @rules,
+        @any_assignment_in_closed_grading_period
+      )
+    `);
+    const result = stmt.run({
+      id: ag.id,
+      name: ag.name,
+      position: ag.position,
+      group_weight: ag.group_weight,
+      sis_source_id: ag.sis_source_id,
+      integration_data: ag.integration_data,
+      rules: ag.rules,
+      any_assignment_in_closed_grading_period: this.boolToInt(
+        ag.any_assignment_in_closed_grading_period
+      ),
+    });
 
-    // 3) Grade 삽입
-    const grade = new Grade("http://gradeurl", 95, "A", 95, "A");
-    const gradePk = this.insertGrade(grade);
-    console.log("Inserted Grade PK:", gradePk);
+    // AssignmentGroup 삽입 후, 연결된 Assignments도 차례로 INSERT
+    const assignmentGroupPk = Number(result.lastInsertRowid);
+    if (ag.assignments?.length) {
+      for (const assignment of ag.assignments) {
+        this.insertAssignment(assignment, assignmentGroupPk);
+      }
+    }
 
-    // 4) Enrollment 삽입 (Grade 연결)
-    const enrollment = new Enrollment(
-      "enroll_1",
-      "101", // user_id
-      "course_101", // course_id
-      "StudentEnrollment",
-      "2023-01-01",
-      "2023-02-01",
-      "0",
-      "2023-01-10",
-      "2023-06-01",
-      "section_1",
-      "root_1",
-      false,
-      "active",
-      "Student",
-      "role_1",
-      "2023-02-10",
-      "2023-03-01",
-      1200,
-      grade, // Grade 객체
-      "http://enrollment_url",
-      true
-    );
-    const enrollmentPk = this.insertEnrollment(enrollment, gradePk);
-    console.log("Inserted Enrollment PK:", enrollmentPk);
+    return assignmentGroupPk;
+  }
 
-    // 필요에 따라 다른 엔티티도 Insert...
+  /**
+   * Assignment INSERT
+   * -> assignmentGroupPk를 받아와서 assignment_group_fk로 저장
+   */
+  public insertAssignment(a: Assignment, assignmentGroupPk?: number): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO Assignments (
+        id,
+        due_at,
+        unlock_at,
+        lock_at,
+        points_possible,
+        grading_type,
+        assignment_group_id,
+        grading_standard_id,
+        created_at,
+        updated_at,
+        peer_reviews,
+        automatic_peer_reviews,
+        position,
+        grade_group_students_individually,
+        anonymous_peer_reviews,
+        group_category_id,
+        post_to_sis,
+        moderated_grading,
+        omit_from_final_grade,
+        intra_group_peer_reviews,
+        anonymous_instructor_annotations,
+        anonymous_grading,
+        graders_anonymous_to_graders,
+        grader_count,
+        grader_comments_visible_to_graders,
+        final_grader_id,
+        grader_names_visible_to_final_grader,
+        allowed_attempts,
+        secure_params,
+        course_id,
+        name,
+        submission_types,
+        has_submitted_submissions,
+        due_date_required,
+        max_name_length,
+        is_quiz_assignment,
+        can_duplicate,
+        original_course_id,
+        original_assignment_id,
+        original_assignment_name,
+        original_quiz_id,
+        workflow_state,
+        muted,
+        html_url,
+        published,
+        only_visible_to_overrides,
+        locked_for_user,
+        submissions_download_url,
+        post_manually,
+        anonymize_students,
+        require_lockdown_browser,
+        in_closed_grading_period,
+        assignment_group_fk
+      ) VALUES (
+        @id,
+        @due_at,
+        @unlock_at,
+        @lock_at,
+        @points_possible,
+        @grading_type,
+        @assignment_group_id,
+        @grading_standard_id,
+        @created_at,
+        @updated_at,
+        @peer_reviews,
+        @automatic_peer_reviews,
+        @position,
+        @grade_group_students_individually,
+        @anonymous_peer_reviews,
+        @group_category_id,
+        @post_to_sis,
+        @moderated_grading,
+        @omit_from_final_grade,
+        @intra_group_peer_reviews,
+        @anonymous_instructor_annotations,
+        @anonymous_grading,
+        @graders_anonymous_to_graders,
+        @grader_count,
+        @grader_comments_visible_to_graders,
+        @final_grader_id,
+        @grader_names_visible_to_final_grader,
+        @allowed_attempts,
+        @secure_params,
+        @course_id,
+        @name,
+        @submission_types,
+        @has_submitted_submissions,
+        @due_date_required,
+        @max_name_length,
+        @is_quiz_assignment,
+        @can_duplicate,
+        @original_course_id,
+        @original_assignment_id,
+        @original_assignment_name,
+        @original_quiz_id,
+        @workflow_state,
+        @muted,
+        @html_url,
+        @published,
+        @only_visible_to_overrides,
+        @locked_for_user,
+        @submissions_download_url,
+        @post_manually,
+        @anonymize_students,
+        @require_lockdown_browser,
+        @in_closed_grading_period,
+        @assignment_group_fk
+      )
+    `);
+    const result = stmt.run({
+      id: a.id,
+      due_at: a.due_at,
+      unlock_at: a.unlock_at,
+      lock_at: a.lock_at,
+      points_possible: a.points_possible,
+      grading_type: a.grading_type,
+      assignment_group_id: a.assignment_group_id,
+      grading_standard_id: a.grading_standard_id,
+      created_at: a.created_at,
+      updated_at: a.updated_at,
+      peer_reviews: this.boolToInt(a.peer_reviews),
+      automatic_peer_reviews: this.boolToInt(a.automatic_peer_reviews),
+      position: a.position,
+      grade_group_students_individually: this.boolToInt(
+        a.grade_group_students_individually
+      ),
+      anonymous_peer_reviews: this.boolToInt(a.anonymous_peer_reviews),
+      group_category_id: a.group_category_id,
+      post_to_sis: this.boolToInt(a.post_to_sis),
+      moderated_grading: this.boolToInt(a.moderated_grading),
+      omit_from_final_grade: this.boolToInt(a.omit_from_final_grade),
+      intra_group_peer_reviews: this.boolToInt(a.intra_group_peer_reviews),
+      anonymous_instructor_annotations: this.boolToInt(
+        a.anonymous_instructor_annotations
+      ),
+      anonymous_grading: this.boolToInt(a.anonymous_grading),
+      graders_anonymous_to_graders: this.boolToInt(
+        a.graders_anonymous_to_graders
+      ),
+      grader_count: a.grader_count,
+      grader_comments_visible_to_graders: this.boolToInt(
+        a.grader_comments_visible_to_graders
+      ),
+      final_grader_id: a.final_grader_id,
+      grader_names_visible_to_final_grader: this.boolToInt(
+        a.grader_names_visible_to_final_grader
+      ),
+      allowed_attempts: a.allowed_attempts,
+      secure_params: a.secure_params,
+      course_id: a.course_id,
+      name: a.name,
+      submission_types: this.toJson(a.submission_types), // string[]
+      has_submitted_submissions: this.boolToInt(a.has_submitted_submissions),
+      due_date_required: this.boolToInt(a.due_date_required),
+      max_name_length: a.max_name_length,
+      is_quiz_assignment: this.boolToInt(a.is_quiz_assignment),
+      can_duplicate: this.boolToInt(a.can_duplicate),
+      original_course_id: a.original_course_id,
+      original_assignment_id: a.original_assignment_id,
+      original_assignment_name: a.original_assignment_name,
+      original_quiz_id: a.original_quiz_id,
+      workflow_state: a.workflow_state,
+      muted: this.boolToInt(a.muted),
+      html_url: a.html_url,
+      published: this.boolToInt(a.published),
+      only_visible_to_overrides: this.boolToInt(a.only_visible_to_overrides),
+      locked_for_user: this.boolToInt(a.locked_for_user),
+      submissions_download_url: a.submissions_download_url,
+      post_manually: this.boolToInt(a.post_manually),
+      anonymize_students: this.boolToInt(a.anonymize_students),
+      require_lockdown_browser: this.boolToInt(a.require_lockdown_browser),
+      in_closed_grading_period: this.boolToInt(a.in_closed_grading_period),
+      assignment_group_fk: assignmentGroupPk ?? null,
+    });
+    return Number(result.lastInsertRowid);
+  }
+
+  public getCourse(courseId: string): Course {
+    const stmt = this.db.prepare(`
+      SELECT * FROM Courses WHERE id = @courseId
+    `);
+    return stmt.get({ courseId });
+  }
+
+  public getNotification(courseId: string): Notification[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM Notifications WHERE course_id = @courseId
+    `);
+    return stmt.all({ courseId });
+  }
+
+  public getModules(courseId: string): ModuleGroup[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM ModuleGroups WHERE course_id = @courseId
+    `);
+    return stmt.all({ courseId });
+  }
+
+  public getModuleItems(courseId: string, moduleId: string): StudentModule[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM StudentModules WHERE course_id = @courseId AND module_id = @moduleId
+    `);
+    return stmt.all({ courseId, moduleId });
+  }
+
+  public getAssignments(courseId: string): AssignmentGroup[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM AssignmentGroups WHERE course_id = @courseId
+    `);
+    return stmt.all({ courseId });
+  }
+
+  public getAssignmentItems(
+    courseId: string,
+    assignment_group_id: string
+  ): Assignment[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM Assignments WHERE course_id = @courseId AND assignment_group_id = @assignment_group_id
+    `);
+    return stmt.all({ courseId, assignment_group_id });
   }
 }
-
-// ----
-// 사용 예시 (이 파일 자체의 맨 아래에 넣거나, 외부에서 import하여 사용)
-// const myDB = new MyDatabase('mydata.db');
-// myDB.exampleUsage();
 
 export default MyDatabase;

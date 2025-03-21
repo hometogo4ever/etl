@@ -3,7 +3,7 @@ import { BigInteger, SecureRandom } from "jsbn";
 import pkg from "ecc-jsbn";
 const { ECCurves } = pkg;
 import { ECCurveFp, ECPointFp } from "ecc-jsbn/lib/ec.js";
-import CryptoJS from "../origin_src/crypto/seed.js";
+import CryptoJS from "../../origin_src/crypto/seed.js";
 import readline from "readline";
 import JSEncrypt from "node-jsencrypt";
 import AxiosInstance from "./AxiosInstance.js";
