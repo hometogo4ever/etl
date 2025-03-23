@@ -1,4 +1,4 @@
-import { Enrollment } from "./Enrollment";
+import { Enrollment } from "./Enrollment.js";
 
 export class User {
   id: number;

@@ -1,4 +1,4 @@
-import { Grade } from "./Grade";
+import { Grade } from "./Grade.js";
 
 export class Enrollment {
   id: string;

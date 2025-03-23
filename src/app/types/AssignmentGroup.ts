@@ -1,4 +1,4 @@
-import { Assignment } from "./Assignment";
+import { Assignment } from "./Assignment.js";
 
 export class AssignmentGroup {
   constructor(

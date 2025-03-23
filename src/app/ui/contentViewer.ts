@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
-import { Course } from "../types/Courses";
+import { Course } from "../types/Courses.js";
 import * as path from "path";
-import { CourseInfoType, CourseItem, loadCourseInfo } from "./courseInfoItem";
+import { CourseInfoType, CourseItem } from "./courseInfoItem.js";
+import { loadCourseInfo } from "./loadNextLevel.js";
 
 /**
  * What Course Information need?
@@ -27,11 +28,11 @@ export class CourseProvider implements vscode.TreeDataProvider<CourseItem> {
       return Promise.resolve([]);
     }
 
-    if (element.type === CourseInfoType.COURSE_INFO) {
+    if (element.type === CourseInfoType.COURSE_INFO && element.course) {
       return Promise.resolve(loadCourseInfo(element.course));
     } else {
       return Promise.resolve(
-        element.loadAfter(element.course.id, element.type)
+        element.loadAfter(element.courseId!, element.additionalInfo!)
       );
     }
   }

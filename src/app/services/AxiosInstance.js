@@ -1,31 +1,87 @@
-import axios from "axios";
-import { wrapper } from "axios-cookiejar-support";
-import * as cheerio from "cheerio";
-import tough from "tough-cookie";
+const axios = require("axios");
+const cheerio = require("cheerio");
+const { CookieJar } = require("tough-cookie");
+const https = require("https");
 
 const AxiosInstance = (function () {
   let instance;
 
   function createInstance() {
-    const jar = new tough.CookieJar();
-    const client = wrapper(
-      axios.create({
-        withCredentials: true,
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        },
-        jar: jar,
-      })
+    const jar = new CookieJar();
+
+    console.log("Node version:", process.version);
+    console.log("Platform:", process.platform);
+    console.log("Axios version:", require("axios/package.json").version);
+
+    const client = axios.create({
+      withCredentials: true,
+      validateStatus: () => true,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+      },
+      maxRedirects: 0,
+      httpsAgent: new https.Agent({
+        keepAlive: true,
+      }),
+    });
+
+    client.interceptors.response.use(
+      async (response) => {
+        const url = response.config.url || "";
+        const setCookie = response.headers["set-cookie"];
+
+        if (setCookie) {
+          for (const cookie of setCookie) {
+            try {
+              await jar.setCookie(cookie, url);
+              console.log("[쿠키 저장됨]", cookie);
+            } catch (e) {
+              console.warn("[쿠키 저장 실패]", cookie, e);
+            }
+          }
+        }
+
+        // Handle 3xx redirect manually
+        const status = response.status;
+        const location = response.headers.location;
+
+        if (status >= 300 && status < 400 && location) {
+          const redirectedUrl = new URL(location, url).toString();
+          console.log("[리디렉션 발생]", redirectedUrl);
+
+          // Clone original config and update the URL
+          const newConfig = {
+            ...response.config,
+            url: redirectedUrl,
+          };
+
+          return client(newConfig); // Re-run the request manually
+        }
+
+        return response;
+      },
+      (error) => {
+        console.error("[응답 에러]", error.message);
+        return Promise.reject(error);
+      }
     );
+
+    client.interceptors.request.use(async (config) => {
+      const cookieStr = await jar.getCookieString(config.url || "");
+      config.headers["Cookie"] = cookieStr;
+      console.log("[요청 쿠키]", config.url, cookieStr);
+      return config;
+    });
 
     return {
       client: client,
       jar: jar,
       async initialBegin() {
-        const { data: html } = await client.get(
-          "https://myetl.snu.ac.kr/login"
-        );
+        const res = await client.get("https://myetl.snu.ac.kr/login");
+
+        console.log(res.headers["set-cookie"]);
+        const html = res.data;
 
         const $ = cheerio.load(html);
         const agt_id = $("input[name=agt_id]").val();
@@ -36,7 +92,7 @@ const AxiosInstance = (function () {
       },
       async initialLing(agt_id, agt_url, agt_r) {
         const { data: html } = await client.post(
-          "https://nsso.snu.ac.kr/sso/usr/login/link",
+          "http://nsso.snu.ac.kr/sso/usr/login/link",
           "agt_id=" + agt_id + "&agt_url=" + agt_url + "&agt_r=" + agt_r
         );
 
@@ -115,11 +171,13 @@ const AxiosInstance = (function () {
           "pni_login_type=" + pni_login_type + "&pni_data=" + pni_data
         );
 
-        const { data: html2 } = await client.post(
+        const response = await client.get(
           "https://etl.snu.ac.kr/xn-sso/gw-cb.php"
         );
+        const status = response.status;
+        const head = response.headers;
+        const html2 = response.data;
         const { param1, param2 } = extractLoginCryptionParams(html2);
-        console.log(html2);
         return { param1, param2 };
       },
       async loginCanvas(id, pw) {
@@ -147,5 +205,4 @@ const AxiosInstance = (function () {
     },
   };
 })();
-
-export default AxiosInstance;
+module.exports = AxiosInstance;

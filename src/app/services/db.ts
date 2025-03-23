@@ -1,20 +1,20 @@
 // database.ts
-import Database = require("better-sqlite3");
-import { User, UserFull } from "../types/User";
-import { Course } from "../types/Courses";
-import { Grade } from "../types/Grade";
-import { Enrollment } from "../types/Enrollment";
-import { Attachment, Folder } from "../types/Attachment";
+import sqlite from "sqlite3";
+import { User, UserFull } from "../types/User.js";
+import { Course } from "../types/Courses.js";
+import { Grade } from "../types/Grade.js";
+import { Enrollment } from "../types/Enrollment.js";
+import { Attachment, Folder } from "../types/Attachment.js";
 import {
   Notification,
   Plannable,
   PlannableNotification,
-} from "../types/Notification";
-import { Submission } from "../types/Submission";
-import { Assignment } from "../types/Assignment";
-import { ModuleGroup } from "../types/ModuleGroup";
-import { AssignmentGroup } from "../types/AssignmentGroup";
-import { StudentModule } from "../types/Module";
+} from "../types/Notification.js";
+import { Submission } from "../types/Submission.js";
+import { Assignment } from "../types/Assignment.js";
+import { ModuleGroup } from "../types/ModuleGroup.js";
+import { AssignmentGroup } from "../types/AssignmentGroup.js";
+import { StudentModule } from "../types/Module.js";
 
 /**
  * SQLite DB 접근 및 각 엔티티를 INSERT하는 메서드를 제공하는 클래스
@@ -22,9 +22,18 @@ import { StudentModule } from "../types/Module";
 class MyDatabase {
   private db: any; // better-sqlite3의 DB 인스턴스
 
+  private static instance: MyDatabase;
+
+  public static getInstance(fileName: string = "example.db"): MyDatabase {
+    if (!MyDatabase.instance) {
+      MyDatabase.instance = new MyDatabase(fileName);
+    }
+    return MyDatabase.instance;
+  }
+
   constructor(fileName: string = "example.db") {
     // DB 파일 오픈
-    this.db = new Database(fileName);
+    this.db = new sqlite.Database(fileName);
     // 외래 키 설정 + 테이블 초기화
     this.initializeDatabase();
   }
@@ -1216,6 +1225,33 @@ class MyDatabase {
       SELECT * FROM Assignments WHERE course_id = @courseId AND assignment_group_id = @assignment_group_id
     `);
     return stmt.all({ courseId, assignment_group_id });
+  }
+
+  public getCourses(): Course[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM Courses WHERE isFavorite = 1
+    `);
+    return stmt.all();
+  }
+
+  public deleteAll() {
+    this.db.exec(`
+      DELETE FROM Users;
+      DELETE FROM Courses;
+      DELETE FROM Grades;
+      DELETE FROM Enrollments;
+      DELETE FROM Folders;
+      DELETE FROM UsersFull;
+      DELETE FROM Plannables;
+      DELETE FROM PlannableNotifications;
+      DELETE FROM Notifications;
+      DELETE FROM Submissions;
+      DELETE FROM Attachments;
+      DELETE FROM ModuleGroups;
+      DELETE FROM StudentModules;
+      DELETE FROM AssignmentGroups;
+      DELETE FROM Assignments;
+    `);
   }
 }
 

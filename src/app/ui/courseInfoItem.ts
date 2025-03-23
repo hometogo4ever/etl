@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Course } from "../types/Courses";
+import { Course } from "../types/Courses.js";
 import * as path from "path";
 
 export enum CourseInfoType {
@@ -10,65 +10,30 @@ export enum CourseInfoType {
   FILES = "파일",
 }
 
-export function loadCourseInfo(course: Course): CourseItem[] {
-  return [
-    new CourseItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
-      course,
-      CourseInfoType.COURSE_INFO,
-      () => {
-        return [];
-      }
-    ),
-    new CourseItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
-      course,
-      CourseInfoType.NOTIFICATION,
-      () => {
-        return [];
-      }
-    ),
-    new CourseItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
-      course,
-      CourseInfoType.LEARNING_MODULES,
-      () => {
-        return [];
-      }
-    ),
-    new CourseItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
-      course,
-      CourseInfoType.ASSIGNMENTS,
-      () => {
-        return [];
-      }
-    ),
-    new CourseItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
-      course,
-      CourseInfoType.FILES,
-      () => {
-        return [];
-      }
-    ),
-  ];
-}
-
 export class CourseItem extends vscode.TreeItem {
+  public courseId?: string;
+  public additionalInfo?: string;
+
   constructor(
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly course: Course,
     public readonly type: CourseInfoType,
-    public loadAfter: (courseId: string, additionalInfo: string) => CourseItem[]
+    public loadAfter: (
+      courseId: string,
+      additionalInfo?: string
+    ) => CourseItem[],
+    public readonly course?: Course
   ) {
     const label =
-      type === CourseInfoType.COURSE_INFO ? course.originalName : type;
+      type === CourseInfoType.COURSE_INFO && course
+        ? course.originalName
+        : type;
     super(label, collapsibleState);
-    if (type === CourseInfoType.COURSE_INFO) {
-      this.tooltip = `${course.courseCode} - ${course.term}`;
+    if (course) {
+      if (type === CourseInfoType.COURSE_INFO) {
+        this.tooltip = `${course.courseCode} - ${course.term}`;
+      }
+      this.description = course.assetString;
     }
-    this.description = this.course.assetString;
     this.iconPath = this.decideIconPath(type);
   }
 

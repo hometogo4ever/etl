@@ -2,6 +2,7 @@
   "name": "etl",
   "displayName": "ETL",
   "description": "etl viewer",
+  "type": "commonjs",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.95.0"
@@ -10,14 +11,48 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
       {
+        "command": "etl.login",
+        "title": "Login to SNU ETL"
+      },
+      {
         "command": "etl.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "etl.loginImmediately",
+        "title": "Login to SNU ETL without authentication"
       }
-    ]
+    ],
+    "views": {
+      "etl-viewer": [
+        {
+          "id": "etl-viewer",
+          "name": "SNU ETL Viewer",
+          "icon": "media/logo.svg",
+          "contextualTitle": "SNU ETL Viewer"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "etl-viewer",
+          "title": "SNU ETL Viewer",
+          "icon": "media/logo.svg"
+        }
+      ],
+      "panel": [
+        {
+          "id": "etl-viewer",
+          "title": "SNU ETL Viewer",
+          "icon": "media/logo.svg"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -43,6 +78,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^2.0.0",
     "acorn": "^8.14.0",
     "acorn-jsx": "^5.3.2",
     "agent-base": "^7.1.1",
@@ -56,7 +92,6 @@
     "axios-cookiejar-support": "^5.0.5",
     "balanced-match": "^1.0.2",
     "base64-js": "^1.5.1",
-    "better-sqlite3": "^11.9.1",
     "binary-extensions": "^2.3.0",
     "bl": "^5.1.0",
     "bn.js": "^5.2.1",
@@ -70,7 +105,6 @@
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
     "chokidar": "^3.6.0",
-    "chromedriver": "^130.0.4",
     "cli-cursor": "^4.0.0",
     "cli-spinners": "^2.9.2",
     "cliui": "^8.0.1",
@@ -84,6 +118,7 @@
     "decamelize": "^4.0.0",
     "deep-is": "^0.1.4",
     "diff": "^5.2.0",
+    "dotenv": "^16.4.7",
     "eastasianwidth": "^0.2.0",
     "ecc-jsbn": "^0.2.0",
     "ecurve": "^1.0.6",
@@ -186,7 +221,6 @@
     "prelude-ls": "^1.2.1",
     "process-nextick-args": "^2.0.1",
     "punycode": "^2.3.1",
-    "puppeteer": "^24.4.0",
     "queue-microtask": "^1.2.3",
     "randombytes": "^2.1.0",
     "readable-stream": "^2.3.8",
@@ -197,13 +231,13 @@
     "reusify": "^1.0.4",
     "run-parallel": "^1.2.0",
     "safe-buffer": "^5.1.2",
-    "selenium-webdriver": "^4.26.0",
     "semver": "^7.6.3",
     "serialize-javascript": "^6.0.2",
     "setimmediate": "^1.0.5",
     "shebang-command": "^2.0.0",
     "shebang-regex": "^3.0.0",
     "signal-exit": "^4.1.0",
+    "sqlite3": "^5.1.7",
     "stdin-discarder": "^0.1.0",
     "string_decoder": "^1.1.1",
     "string-width": "^5.1.2",
@@ -234,6 +268,9 @@
     "yargs-parser": "^21.1.1",
     "yargs-unparser": "^2.0.0",
     "yocto-queue": "^0.1.0"
+  },
+  "resolutions": {
+    "tough-cookie": "^5.1.2"
   },
   "keywords": [],
   "author": "",

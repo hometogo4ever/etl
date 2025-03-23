@@ -1,19 +1,18 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar, Cookie } from "tough-cookie";
-import { Course } from "../types/Courses";
-import { Notification, PlannableNotification } from "../types/Notification";
-import MyDatabase from "./db";
-import * as cheerio from "cheerio";
-import { Module } from "module";
-import { StudentModule } from "../types/Module";
-import { ModuleGroup } from "../types/ModuleGroup";
-import { AssignmentGroup } from "../types/AssignmentGroup";
+import { Course } from "../types/Courses.js";
+import { Notification, PlannableNotification } from "../types/Notification.js";
+import { StudentModule } from "../types/Module.js";
+import { ModuleGroup } from "../types/ModuleGroup.js";
+import { AssignmentGroup } from "../types/AssignmentGroup.js";
+import https from "https";
 
 class ETLApiInstance {
   private static instance: ETLApiInstance;
   private axiosInstance: AxiosInstance;
-  private db: MyDatabase;
+
+  private isLogined: boolean = false;
   private jar: CookieJar;
 
   private csrf_token: string;
@@ -23,32 +22,74 @@ class ETLApiInstance {
   }
 
   private constructor() {
-    this.jar = new CookieJar();
-    this.db = new MyDatabase();
-
     this.csrf_token = "";
-    this.axiosInstance = wrapper(
-      axios.create({
-        baseURL: "https://myetl.snu.ac.kr",
-        withCredentials: true,
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        },
-        jar: this.jar,
-      })
-    );
-    this.axiosInstance.interceptors.response.use((response: any) => {
-      const setCookieHeader = response.headers["set-cookie"];
-      if (setCookieHeader) {
-        setCookieHeader.forEach((cookie: string) => {
-          const parsedCookie = Cookie.parse(cookie);
-          if (parsedCookie && parsedCookie.key === "_csrf_token") {
-            this.csrf_token = parsedCookie.value;
+    this.jar = new CookieJar();
+    this.axiosInstance = axios.create({
+      baseURL: "https://myetl.snu.ac.kr",
+      withCredentials: true,
+      validateStatus: () => true,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+      },
+      maxRedirects: 0,
+      httpsAgent: new https.Agent({
+        keepAlive: true,
+      }),
+    });
+
+    this.axiosInstance.interceptors.response.use(
+      async (response) => {
+        const url = response.config.url || "";
+        const setCookie = response.headers["set-cookie"];
+
+        if (setCookie) {
+          for (const cookie of setCookie) {
+            try {
+              const parsedCookie = Cookie.parse(cookie);
+              if (parsedCookie && parsedCookie.key === "_csrf_token") {
+                this.csrf_token = parsedCookie.value;
+              }
+              await this.jar.setCookie(cookie, url);
+              console.log("[쿠키 저장됨]", cookie);
+            } catch (e) {
+              console.warn("[쿠키 저장 실패]", cookie, e);
+            }
           }
-        });
+        }
+
+        // Handle 3xx redirect manually
+        const status = response.status;
+        const location = response.headers.location;
+
+        if (status >= 300 && status < 400 && location) {
+          const base = response.config.baseURL || "";
+          const fullRequestUrl = new URL(response.config.url!, base).toString();
+          const redirectedUrl = new URL(location, fullRequestUrl).toString();
+          console.log("[리디렉션 발생]", redirectedUrl);
+
+          const newConfig = {
+            ...response.config,
+            url: redirectedUrl,
+            baseURL: undefined, // remove baseURL to avoid double prefix
+          };
+
+          return this.axiosInstance(newConfig);
+        }
+
+        return response;
+      },
+      (error) => {
+        console.error("[응답 에러]", error.message);
+        return Promise.reject(error);
       }
-      return response;
+    );
+
+    this.axiosInstance.interceptors.request.use(async (config) => {
+      const cookieStr = await this.jar.getCookieString(config.url || "");
+      config.headers["Cookie"] = cookieStr;
+      console.log("[요청 쿠키]", config.url, cookieStr);
+      return config;
     });
   }
 
@@ -74,7 +115,7 @@ class ETLApiInstance {
         password +
         "&pseudonym_session[remember_me]=0"
     );
-
+    this.isLogined = true;
     return response;
   }
 
@@ -147,6 +188,10 @@ class ETLApiInstance {
     return response.data;
   }
 
+  public hasLogined(): boolean {
+    return this.isLogined;
+  }
+
   static getInstance() {
     if (!ETLApiInstance.instance) {
       ETLApiInstance.instance = new ETLApiInstance();
@@ -155,7 +200,4 @@ class ETLApiInstance {
   }
 }
 
-const instance = ETLApiInstance.getInstance();
-instance.initialize().then(() => {
-  instance.login("2023-15725", "PU1LNUbuRPPRvcsodIgxzD9XZLx2m4oA");
-});
+export default ETLApiInstance;

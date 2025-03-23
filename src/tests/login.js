@@ -1,15 +1,11 @@
 // filename: generateKeys.js
-import * as vscode from "vscode";
-import { BigInteger, SecureRandom } from "jsbn";
-import pkg from "ecc-jsbn";
-const { ECCurves } = pkg;
-import { ECCurveFp, ECPointFp } from "ecc-jsbn/lib/ec.js";
-import CryptoJS from "./seed.js";
-import JSEncrypt from "node-jsencrypt";
-import AxiosInstance from "./AxiosInstance.js";
-const { dotenv } = require("dotenv");
-const fs = require("fs");
-const path = require("path");
+const { BigInteger, SecureRandom } = require("jsbn");
+const { ECCurves } = require("ecc-jsbn");
+const { ECCurveFp, ECPointFp } = require("ecc-jsbn/lib/ec.js");
+const CryptoJS = require("../../out/src/app/services/seed.js");
+const JSEncrypt = require("node-jsencrypt");
+const AxiosInstance = require("../app/services/AxiosInstance.js");
+const readline = require("readline");
 
 class LoginAuth {
   constructor() {
@@ -162,59 +158,45 @@ class LoginAuth {
     );
     this.generateClientCalKey(svr_qx, svr_qy);
 
-    const userId = await vscode.window.showInputBox({
-      placeHolder: "Enter your SNU ID",
-      ignoreFocusOut: true,
-    });
-    if (!userId) {
-      return Promise.reject("User ID is not provided");
-    }
-
-    const password = await vscode.window.showInputBox({
-      placeHolder: "Enter your SNU Password",
-      ignoreFocusOut: true,
-      password: true,
-    });
-    if (!password) {
-      return Promise.reject("Password is not provided");
-    }
-
-    const req_data = this.generateAuth(userId, password, login_key);
+    const req_data = this.generateAuth(
+      "hometogo0625",
+      "sessy5295!!",
+      login_key
+    );
     const data = await this.axiosInstance.auth(req_data);
-    console.log(data);
     this.client_id = data.snu_member_key;
     const msgSend = await this.axiosInstance.sendAuthMSG("sms", login_key);
-    console.log(msgSend);
-
-    const crt_no = await vscode.window.showInputBox({
-      placeHolder: "Enter the verification code",
-      ignoreFocusOut: true,
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
     });
-    if (!crt_no) {
-      return Promise.reject("Verification code is not provided");
-    }
 
-    try {
-      const verifyResponse = await this.axiosInstance.verifyMSG(
-        crt_no,
-        login_key
-      );
-      // 7) PNI, 비밀번호 생성
-      const { param1, param2 } = await this.axiosInstance.getPNI(login_key);
-      const newpw = this.loginCryption(param1, param2);
-      console.log(newpw);
-      console.log(this.client_id);
+    rl.question("Enter the verification code: ", async (crt_no) => {
+      try {
+        console.log("Verification Code:", crt_no);
+        const verifyResponse = await this.axiosInstance.verifyMSG(
+          crt_no,
+          login_key
+        );
+        console.log("Verification Response:", verifyResponse);
+        const { param1, param2 } = await this.axiosInstance.getPNI(login_key);
+        const newpw = this.loginCryption(param1, param2);
+        console.log("Encrypted Password:", param1);
+        console.log("RSA Private Key:", param2);
 
-      const envPath = path.resolve(__dirname, "../../../.env");
-      fs.appendFileSync(envPath, `ID=${this.client_id}\nPW=${newpw}\n`);
-
-      return { id: this.client_id, pw: newpw };
-      // 만약 여기서 Canvas 로그인 등 추가 작업이 필요하면:
-      // await this.axiosInstance.loginCanvas(this.client_id, newpw);
-    } catch (error) {
-      return Promise.reject(error);
-    }
+        console.log("User Id:", this.client_id);
+        console.log("New Password:", newpw);
+        //await this.axiosInstance.loginCanvas(this.client_id, newpw);
+      } catch (error) {
+        return Promise.reject(error);
+      } finally {
+        rl.close();
+      }
+    });
   }
 }
 
-export default LoginAuth;
+const loginAuth = new LoginAuth();
+loginAuth.generatePrivateKey();
+loginAuth.generatePublicKey();
+loginAuth.action();
