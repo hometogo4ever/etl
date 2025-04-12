@@ -8,7 +8,6 @@ import path from "path";
 
 export function activate(context: vscode.ExtensionContext) {
   const loginAuth = new LoginAuth();
-  const etlApiInstance = ETLApiInstance.getInstance();
   loginAuth.generatePrivateKey();
   loginAuth.generatePublicKey();
 
@@ -16,6 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
     "etl.login",
     async () => {
       const result: any = await loginAuth.action();
+
+      const etlApiInstance = ETLApiInstance.getInstance();
       await etlApiInstance.initialize();
       await etlApiInstance.login(result.id, result.pw);
 
@@ -36,6 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
     async () => {
       const envPath = path.join(context.extensionPath, ".env");
       require("dotenv").config({ path: envPath });
+
+      const etlApiInstance = ETLApiInstance.getInstance();
       console.log(process.env);
 
       const id = process.env.ID;

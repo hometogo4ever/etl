@@ -6,56 +6,67 @@ import { Notification, PlannableNotification } from "../types/Notification.js";
 import { StudentModule } from "../types/Module.js";
 import { ModuleGroup } from "../types/ModuleGroup.js";
 import { AssignmentGroup } from "../types/AssignmentGroup.js";
-import https from "https";
+const https = require("https");
+const cheerio = require("cheerio");
 
 class ETLApiInstance {
   private static instance: ETLApiInstance;
   private axiosInstance: AxiosInstance;
 
   private isLogined: boolean = false;
-  private jar: CookieJar;
 
   private csrf_token: string;
+  private auth_token: string;
 
   public getToken() {
     return this.csrf_token;
   }
 
   private constructor() {
+    const jar = new CookieJar();
     this.csrf_token = "";
-    this.jar = new CookieJar();
-    this.axiosInstance = axios.create({
-      baseURL: "https://myetl.snu.ac.kr",
+    this.auth_token = "";
+    const axiosCreate: AxiosInstance = axios.create({
       withCredentials: true,
       validateStatus: () => true,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
       },
-      maxRedirects: 0,
       httpsAgent: new https.Agent({
         keepAlive: true,
       }),
     });
-
+    this.axiosInstance = axiosCreate;
     this.axiosInstance.interceptors.response.use(
-      async (response) => {
-        const url = response.config.url || "";
-        const setCookie = response.headers["set-cookie"];
-
-        if (setCookie) {
-          for (const cookie of setCookie) {
+      (response: any) => {
+        const setCookieHeader = response.headers["set-cookie"];
+        console.log(
+          "[응답]",
+          response.status,
+          response.config.url,
+          response.message
+        );
+        if (response.status >= 400) {
+          console.error("[에러 발생]", response);
+        }
+        const url = new URL(
+          response.config.url || "",
+          response.config.baseURL || "https://myetl.snu.ac.kr"
+        ).toString();
+        if (setCookieHeader) {
+          setCookieHeader.forEach(async (cookie: string) => {
             try {
+              await jar.setCookie(cookie, url);
+              console.log("[쿠키 저장됨]", cookie);
               const parsedCookie = Cookie.parse(cookie);
               if (parsedCookie && parsedCookie.key === "_csrf_token") {
                 this.csrf_token = parsedCookie.value;
               }
-              await this.jar.setCookie(cookie, url);
-              console.log("[쿠키 저장됨]", cookie);
             } catch (e) {
-              console.warn("[쿠키 저장 실패]", cookie, e);
+              console.log("[쿠키 저장 실패]", cookie, e);
             }
-          }
+          });
         }
 
         // Handle 3xx redirect manually
@@ -63,52 +74,64 @@ class ETLApiInstance {
         const location = response.headers.location;
 
         if (status >= 300 && status < 400 && location) {
-          const base = response.config.baseURL || "";
-          const fullRequestUrl = new URL(response.config.url!, base).toString();
-          const redirectedUrl = new URL(location, fullRequestUrl).toString();
+          const redirectedUrl = new URL(location, url).toString();
           console.log("[리디렉션 발생]", redirectedUrl);
 
+          // Clone original config and update the URL
           const newConfig = {
             ...response.config,
             url: redirectedUrl,
-            baseURL: undefined, // remove baseURL to avoid double prefix
+            baseURL: undefined, // Important!
           };
 
-          return this.axiosInstance(newConfig);
+          return this.axiosInstance(newConfig); // Re-run the request manually
         }
-
         return response;
       },
       (error) => {
-        console.error("[응답 에러]", error.message);
+        console.error("[에러 발생]", error.message);
         return Promise.reject(error);
       }
     );
 
     this.axiosInstance.interceptors.request.use(async (config) => {
-      const cookieStr = await this.jar.getCookieString(config.url || "");
+      const cookieStr = await jar.getCookieString(config.url || "");
       config.headers["Cookie"] = cookieStr;
       console.log("[요청 쿠키]", config.url, cookieStr);
       return config;
     });
   }
 
-  public async initialize() {
-    await this.axiosInstance.get("/login/canvas");
+  public async initialize(): Promise<boolean> {
+    const { data: html } = await this.axiosInstance.get(
+      "https://myetl.snu.ac.kr/login/canvas"
+    );
     if (this.csrf_token) {
+      const $ = cheerio.load(html);
+      const auth_token =
+        $('form#login_form input[name="authenticity_token"]').val() || "";
+      console.log("[Authenticity Token]", auth_token);
+      if (!auth_token) {
+        throw new Error("Failed to get CSRF token");
+      }
+      this.auth_token = auth_token;
       return true;
+    } else {
+      return false;
     }
   }
 
   public async login(username: string, password: string) {
-    if (!this.csrf_token) {
+    if (!this.csrf_token || !this.auth_token) {
       throw new Error("CSUF token is not initialized");
     }
+    console.log("[Login Data] id: ", username, "pw: ", password);
     const response = await this.axiosInstance.post(
-      "/login/canvas",
-      "utf8=✓&redirect_to_ssl=1&" +
+      "https://myetl.snu.ac.kr/login/canvas",
+      "utf8=✓&" +
         "authenticity_token=" +
-        this.csrf_token +
+        this.auth_token +
+        "&redirect_to_ssl=1" +
         "&pseudonym_session[unique_id]=" +
         username +
         "&pseudonym_session[password]=" +
@@ -124,7 +147,7 @@ class ETLApiInstance {
       throw new Error("CSUF token is not initialized");
     }
     const response: AxiosResponse<Course[]> = await this.axiosInstance.get(
-      "/api/v1/dashboard/dashboard_cards"
+      "https://myetl.snu.ac.kr/api/v1/dashboard/dashboard_cards"
     );
     return response.data;
   }
