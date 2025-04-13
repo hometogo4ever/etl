@@ -1,0 +1,114 @@
+.vscode-container {
+  font-family: system-ui, sans-serif;
+  color: var(--vscode-editor-foreground);
+  background-color: var(--vscode-editor-background);
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+.vscode-container h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--vscode-editor-foreground);
+}
+
+.vscode-container a {
+  color: var(--vscode-textLink-foreground);
+  text-decoration: underline;
+}
+
+.vscode-container a:hover {
+  color: var(--vscode-textLink-activeForeground);
+}
+
+.vscode-container .toolbarView {
+  background-color: var(--vscode-sideBar-background);
+  border: 1px solid var(--vscode-sideBar-border);
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.vscode-container .admin-links {
+  text-align: right;
+}
+
+.vscode-container .admin-links a {
+  display: inline-block;
+  margin-left: 0.5rem;
+  color: var(--vscode-button-background);
+  background-color: var(--vscode-button-secondaryBackground);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.vscode-container .discussion_entry {
+  border: 1px solid var(--vscode-editorGroup-border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--vscode-editor-background);
+}
+
+.vscode-container .discussion-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.vscode-container .discussion-subtitle {
+  font-size: 0.9rem;
+  color: var(--vscode-descriptionForeground);
+}
+
+.vscode-container .message_wrapper {
+  margin-top: 1rem;
+}
+
+.vscode-container .message.user_content {
+  padding: 0.75rem;
+  background-color: var(--vscode-editorWidget-background);
+  border-radius: 6px;
+  border: 1px solid var(--vscode-editorWidget-border);
+}
+
+.vscode-container .discussion-fyi {
+  margin-top: 1rem;
+  font-style: italic;
+  color: var(--vscode-descriptionForeground);
+}
+
+.vscode-container .discussion-header-right {
+  text-align: right;
+}
+
+.vscode-container .btn {
+  border: none;
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  padding: 0.4rem 0.7rem;
+  margin: 0 0.3rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.vscode-container .btn-success {
+  background-color: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-foreground);
+}
+
+.vscode-container .btn:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+.vscode-container input[type="search"] {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 4px;
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+}
+
+.vscode-container input[type="checkbox"] {
+  margin-left: 1rem;
+}

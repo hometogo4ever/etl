@@ -5,6 +5,8 @@ import MyDatabase from "../services/db.js";
 import {
   AssignmentGroupItem,
   AssignmentItem,
+  FileItem,
+  FolderItem,
   LearningModuleGroup,
   LearningModuleItem,
   NotificationItem,
@@ -17,20 +19,10 @@ import ETLApiInstance from "../services/ETLApiInstance.js";
 // loadAfter : (courseId: string, additionalInfo: string) => CourseItem[]
 
 // 1. Course Name => CourseItems
-
-const db = MyDatabase.getInstance();
 const etl = ETLApiInstance.getInstance();
 
 export function loadCourseInfo(course: Course): CourseItem[] {
   return [
-    new CourseItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
-      CourseInfoType.COURSE_INFO,
-      () => {
-        return [];
-      },
-      course
-    ),
     new CourseItem(
       vscode.TreeItemCollapsibleState.Collapsed,
       CourseInfoType.NOTIFICATION,
@@ -49,23 +41,22 @@ export function loadCourseInfo(course: Course): CourseItem[] {
       loadAssignments,
       course
     ),
-    new CourseItem(
+    new FolderItem(
       vscode.TreeItemCollapsibleState.Collapsed,
-      CourseInfoType.FILES,
-      () => {
-        return [];
-      }
+      undefined,
+      loadFolderItems,
+      course.id
     ),
   ];
 }
 
 // 2. CourseItem -> Notification
 
-export const loadNotification = (courseId: string): CourseItem[] => {
-  const notifications = db.getNotification(courseId);
+export const loadNotification = async (courseId: string) => {
+  const notifications = await etl.getNotifications(courseId);
   return notifications.map((notification) => {
     return new NotificationItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
+      vscode.TreeItemCollapsibleState.None,
       notification,
       courseId
     );
@@ -74,11 +65,11 @@ export const loadNotification = (courseId: string): CourseItem[] => {
 
 // 3. CourseItem -> Learning Modules Groups
 
-export const loadLearningModules = (courseId: string): CourseItem[] => {
-  const moduleGroups = db.getModules(courseId);
+export const loadLearningModules = async (courseId: string) => {
+  const moduleGroups = await etl.getCourseModules(courseId);
   return moduleGroups.map((moduleGroup) => {
     return new LearningModuleGroup(
-      vscode.TreeItemCollapsibleState.Expanded,
+      vscode.TreeItemCollapsibleState.Collapsed,
       moduleGroup,
       courseId,
       loadLearningModule
@@ -88,17 +79,17 @@ export const loadLearningModules = (courseId: string): CourseItem[] => {
 
 // 4. Learning Modules Group -> Learning Modules
 
-export const loadLearningModule = (
+export const loadLearningModule = async (
   courseId: string,
   additionalInfo?: string
-): CourseItem[] => {
+) => {
   if (!additionalInfo) {
     return [];
   }
-  const modules = db.getModuleItems(courseId, additionalInfo);
+  const modules = await etl.getModuleItems(courseId, additionalInfo);
   return modules.map((module) => {
     return new LearningModuleItem(
-      vscode.TreeItemCollapsibleState.Collapsed,
+      vscode.TreeItemCollapsibleState.None,
       module,
       courseId,
       additionalInfo
@@ -108,8 +99,8 @@ export const loadLearningModule = (
 
 // 5. CourseItem -> Assignment Groups
 
-export const loadAssignments = (courseId: string): CourseItem[] => {
-  const assignmentGroups = db.getAssignments(courseId);
+export const loadAssignments = async (courseId: string) => {
+  const assignmentGroups = await etl.getAssignments(courseId);
   return assignmentGroups.map((assignmentGroup) => {
     return new AssignmentGroupItem(
       vscode.TreeItemCollapsibleState.Collapsed,
@@ -117,4 +108,35 @@ export const loadAssignments = (courseId: string): CourseItem[] => {
       courseId
     );
   });
+};
+
+export const loadRoot = async (courseId: string) => {
+  const folder = await etl.getRootFolder(courseId);
+  return folder;
+};
+
+export const loadFolderItems = async (
+  courseId: string,
+  additionalInfo?: string
+) => {
+  console.log("Loading Folder Items", courseId, additionalInfo);
+  if (!additionalInfo) {
+    return [];
+  }
+
+  const folders = await etl.getFolderFolders(additionalInfo);
+  const files = await etl.getFolderFiles(additionalInfo);
+  const foldersItems = folders.map((folder) => {
+    return new FolderItem(
+      vscode.TreeItemCollapsibleState.Collapsed,
+      folder,
+      loadFolderItems,
+      courseId
+    );
+  });
+
+  const filesItems = files.map((file) => {
+    return new FileItem(vscode.TreeItemCollapsibleState.None, file, courseId);
+  });
+  return [...foldersItems, ...filesItems];
 };

@@ -25,6 +25,26 @@
       {
         "command": "etl.loginImmediately",
         "title": "Login to SNU ETL without authentication"
+      },
+      {
+        "command": "etl.openVirtualWebView",
+        "title": "Open Virtual WebView"
+      },
+      {
+        "command": "etl.openNotification",
+        "title": "Open Notification"
+      },
+      {
+        "command": "etl.openModule",
+        "title": "Open Module"
+      },
+      {
+        "command": "etl.openAssignment",
+        "title": "Open Assignment"
+      },
+      {
+        "command": "etl.openFile",
+        "title": "Open File"
       }
     ],
     "views": {

@@ -8,6 +8,7 @@ export enum CourseInfoType {
   LEARNING_MODULES = "학습모듈",
   ASSIGNMENTS = "과제",
   FILES = "파일",
+  FOLDERS = "폴더",
 }
 
 export class CourseItem extends vscode.TreeItem {
@@ -20,7 +21,7 @@ export class CourseItem extends vscode.TreeItem {
     public loadAfter: (
       courseId: string,
       additionalInfo?: string
-    ) => CourseItem[],
+    ) => Promise<CourseItem[]>,
     public readonly course?: Course
   ) {
     const label =
@@ -32,14 +33,27 @@ export class CourseItem extends vscode.TreeItem {
       if (type === CourseInfoType.COURSE_INFO) {
         this.tooltip = `${course.courseCode} - ${course.term}`;
       }
-      this.description = course.assetString;
+      this.description = course.term;
     }
     this.iconPath = this.decideIconPath(type);
+    this.courseId = course?.id;
   }
 
   private decideIconPath(type: CourseInfoType) {
     switch (type) {
       case CourseInfoType.COURSE_INFO:
+        console.log(
+          "File PAth: ",
+          path.join(
+            __filename,
+            "..",
+            "..",
+            "..",
+            "resources",
+            "light",
+            "course.svg"
+          )
+        );
         return {
           light: path.join(
             __filename,
@@ -142,6 +156,28 @@ export class CourseItem extends vscode.TreeItem {
             "resources",
             "dark",
             "files.svg"
+          ),
+        };
+
+      case CourseInfoType.FOLDERS:
+        return {
+          light: path.join(
+            __filename,
+            "..",
+            "..",
+            "..",
+            "resources",
+            "light",
+            "folders.svg"
+          ),
+          dark: path.join(
+            __filename,
+            "..",
+            "..",
+            "..",
+            "resources",
+            "dark",
+            "folders.svg"
           ),
         };
     }

@@ -4,8 +4,8 @@ const test = async () => {
   const etlApiInstance = ETLApiInstance.getInstance();
 
   console.log("Initializing");
-  const initialized = await etlApiInstance.initialize();
-  console.log("Initialized", initialized);
+  //const initialized = await etlApiInstance.initialize();
+  //console.log("Initialized", initialized);
 
   console.log("Logging in");
   await etlApiInstance.login("2023-15725", "SKmfITocGPdUAXsJBdAhgPM7YtypAOPK");

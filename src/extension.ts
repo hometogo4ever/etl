@@ -5,6 +5,13 @@ import { CourseProvider } from "./app/ui/contentViewer.js";
 import DataSyncManager from "./commands/dbsync.js";
 import MyDatabase from "./app/services/db.js";
 import path from "path";
+import { openVirtualWebview } from "./app/services/VirtualDoc.js";
+import { loadNotification } from "./app/ui/loadNextLevel.js";
+import {
+  loadAssignmentView,
+  loadFile,
+  loadNotificationView,
+} from "./app/ui/loadWebView.js";
 
 export function activate(context: vscode.ExtensionContext) {
   const loginAuth = new LoginAuth();
@@ -50,12 +57,14 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.window.showInformationMessage("Login success");
 
-        const db = MyDatabase.getInstance();
+        //const db = MyDatabase.getInstance(context);
 
-        const dbsync = DataSyncManager.getInstance(etlApiInstance, db);
-        dbsync.syncCourses();
+        //const dbsync = DataSyncManager.getInstance(etlApiInstance, db);
+        //dbsync.syncCourses();
 
-        const provider = new CourseProvider(db.getCourses());
+        const courses = await etlApiInstance.getCourses();
+
+        const provider = new CourseProvider(courses);
         vscode.window.registerTreeDataProvider("etl-viewer", provider);
       } else {
         vscode.window.showErrorMessage("ID or Password not found in .env file");
@@ -70,4 +79,25 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(loginCommand);
   context.subscriptions.push(helloWorld);
   context.subscriptions.push(loginImmediately);
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "etl.openNotification",
+      loadNotificationView
+    )
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("etl.openAssignment", loadAssignmentView)
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "etl.openFile",
+      async (courseId: string, fileId: string) => {
+        await loadFile(
+          path.join(context.globalStorageUri.fsPath, "files"),
+          courseId,
+          fileId
+        );
+      }
+    )
+  );
 }
